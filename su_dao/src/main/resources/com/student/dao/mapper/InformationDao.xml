@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.student.dao.mapper.InformationDao">
+
+    <resultMap type="com.student.entity.Information" id="InformationMap">
+        <result property="iid" column="iid" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="addtime" column="addtime" jdbcType="TIMESTAMP"/>
+        <result property="photo" column="photo" jdbcType="VARCHAR"/>
+        <result property="vidio" column="vidio" jdbcType="VARCHAR"/>
+        <result property="typeId" column="type_id" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InformationMap">
+        select
+          iid, uid, content, addtime, photo, vidio, type_id, state
+        from information
+        where iid = #{iid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="InformationMap">
+        select
+          iid, uid, content, addtime, photo, vidio, type_id, state
+        from information
+        <where>
+            <if test="iid != null">
+                and iid = #{iid}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="addtime != null">
+                and addtime = #{addtime}
+            </if>
+            <if test="photo != null and photo != ''">
+                and photo = #{photo}
+            </if>
+            <if test="vidio != null and vidio != ''">
+                and vidio = #{vidio}
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and type_id = #{typeId}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from information
+        <where>
+            <if test="iid != null">
+                and iid = #{iid}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="addtime != null">
+                and addtime = #{addtime}
+            </if>
+            <if test="photo != null and photo != ''">
+                and photo = #{photo}
+            </if>
+            <if test="vidio != null and vidio != ''">
+                and vidio = #{vidio}
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and type_id = #{typeId}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="iid" useGeneratedKeys="true">
+        insert into information(uid, content, addtime, photo, vidio, type_id, state)
+        values (#{uid}, #{content}, #{addtime}, #{photo}, #{vidio}, #{typeId}, #{state})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="iid" useGeneratedKeys="true">
+        insert into information(uid, content, addtime, photo, vidio, type_id, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.uid}, #{entity.content}, #{entity.addtime}, #{entity.photo}, #{entity.vidio}, #{entity.typeId}, #{entity.state})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="iid" useGeneratedKeys="true">
+        insert into information(uid, content, addtime, photo, vidio, type_id, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.uid}, #{entity.content}, #{entity.addtime}, #{entity.photo}, #{entity.vidio}, #{entity.typeId}, #{entity.state})
+        </foreach>
+        on duplicate key update
+        uid = values(uid),
+        content = values(content),
+        addtime = values(addtime),
+        photo = values(photo),
+        vidio = values(vidio),
+        type_id = values(type_id),
+        state = values(state)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update information
+        <set>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="addtime != null">
+                addtime = #{addtime},
+            </if>
+            <if test="photo != null and photo != ''">
+                photo = #{photo},
+            </if>
+            <if test="vidio != null and vidio != ''">
+                vidio = #{vidio},
+            </if>
+            <if test="typeId != null and typeId != ''">
+                type_id = #{typeId},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where iid = #{iid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from information where iid = #{iid}
+    </delete>
+
+</mapper>
+

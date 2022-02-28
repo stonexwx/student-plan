@@ -1,0 +1,99 @@
+package com.student.biz.impl;
+
+import com.student.biz.UsersService;
+import com.student.dao.mapper.UsersDao;
+import com.student.entity.PageRequest;
+import com.student.entity.Users;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 用户表(Users)表服务实现类
+ *
+ * @author makejava
+ * @since 2022-02-28 09:02:23
+ */
+@Service("usersService")
+public class UsersServiceImpl implements UsersService {
+    @Resource
+    private UsersDao usersDao;
+    @Autowired
+    HashMap<String,Object> map;
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param uid 主键
+     * @return 实例对象
+     */
+    @Override
+    public Users queryById(Long uid) {
+        return this.usersDao.queryById(uid);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param users 筛选条件
+     * @param pageRequest      分页对象
+     * @return 查询结果
+     */
+    @Override
+    public Map<String,Object> queryByPage(Users users, PageRequest pageRequest) {
+        long total = this.usersDao.count(users);
+        return new PageImpl<>(this.usersDao.queryAllByLimit(users, pageRequest), pageRequest, total);
+    }
+
+    @Override
+    public Map<String, Object> queryByPhoneAndPassword(Users users) {
+        long total = this.usersDao.count(users);
+        Users users1= (Users) this.usersDao.queryAllByLimit(users,new PageRequest());
+        if(users1!=null){
+            map.put("flag",true);
+            map.put("data",users1);
+            map.put("count",total);
+            return map;
+        }
+        map.put("flag",false);
+        return map;
+    }
+
+    /**
+     * 新增数据
+     *
+     * @param users 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public Users insert(Users users) {
+        this.usersDao.insert(users);
+        return users;
+    }
+
+    /**
+     * 修改数据
+     *
+     * @param users 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public Users update(Users users) {
+        this.usersDao.update(users);
+        return this.queryById(users.getUid());
+    }
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param uid 主键
+     * @return 是否成功
+     */
+    @Override
+    public boolean deleteById(Long uid) {
+        return this.usersDao.deleteById(uid) > 0;
+    }
+}
