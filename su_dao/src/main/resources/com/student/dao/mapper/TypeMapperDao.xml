@@ -36,7 +36,7 @@
                 and tid = #{tid}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{pageable.page}, #{pageable.limit}
     </select>
 
     <!--统计总行数-->
@@ -62,7 +62,7 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="mid" useGeneratedKeys="true">
         insert into type_mapper(type_id, iid, tid)
-        values (#{typeId}, #{iid}, #{tid})
+        values (#{typeMapper.typeId}, #{typeMapper.iid}, #{typeMapper.tid})
     </insert>
 
     <insert id="insertBatch" keyProperty="mid" useGeneratedKeys="true">

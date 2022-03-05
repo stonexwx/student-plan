@@ -1,6 +1,6 @@
 /**
 * 左边菜单
-*/ 
+*/
 <template>
   <el-menu
     default-active="2"
@@ -233,7 +233,7 @@ export default {
     };
     // const userdata = localStorage.getItem("userdata");
     const userdata = {
-      role_id:"0"
+      role_id:"1"
     }
     if (userdata.role_id == "0") {
       this.allmenu = res.Mandata;

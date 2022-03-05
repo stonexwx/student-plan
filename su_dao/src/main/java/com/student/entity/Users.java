@@ -105,7 +105,24 @@ public class Users implements Serializable {
     }
 
     public void setSex(String sex) {
-        this.sex = sex;
+        switch (sex) {
+            case "男":
+                this.sex = "0";
+                break;
+            case "女":
+                this.sex = "1";
+                break;
+            case "0":
+                this.sex = "男";
+                break;
+            case "1":
+                this.sex = "女";
+                break;
+            default:
+                this.sex = "未知";
+                break;
+        }
+
     }
 
     public String getRoleId() {

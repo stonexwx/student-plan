@@ -3,9 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.SecondTypeService;
 import com.student.dao.mapper.SecondTypeDao;
 import com.student.entity.SecondType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,15 +32,15 @@ public class SecondTypeServiceImpl implements SecondTypeService {
     /**
      * 分页查询
      *
-     * @param secondType 筛选条件
-     * @param pageRequest      分页对象
+     * @param secondType  筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<SecondType> queryByPage(SecondType secondType, PageRequest pageRequest) {
-        long total = this.secondTypeDao.count(secondType);
-        return new PageImpl<>(this.secondTypeDao.queryAllByLimit(secondType, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<SecondType> queryByPage(SecondType secondType, PageRequest pageRequest) {
+//        long total = this.secondTypeDao.count(secondType);
+//        return new PageImpl<>(this.secondTypeDao.queryAllByLimit(secondType, pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

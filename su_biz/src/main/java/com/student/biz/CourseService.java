@@ -2,8 +2,6 @@ package com.student.biz;
 
 import com.student.entity.Course;
 import com.student.entity.PageRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.Map;
 
@@ -26,11 +24,11 @@ public interface CourseService {
     /**
      * 分页查询
      *
-     * @param course 筛选条件
-     * @param pageRequest      分页对象
+     * @param course      筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Map<String,Object> queryByPage(Course course, PageRequest pageRequest);
+    Map<String, Object> queryByPage(Course course, PageRequest pageRequest);
 
     /**
      * 新增数据

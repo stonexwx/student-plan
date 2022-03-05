@@ -1,8 +1,11 @@
 package com.student.biz;
 
+import com.student.dto.TaskDTO;
+import com.student.entity.PageRequest;
 import com.student.entity.Task;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 任务表(Task)表服务接口
@@ -23,19 +26,24 @@ public interface TaskService {
     /**
      * 分页查询
      *
-     * @param task 筛选条件
-     * @param pageRequest      分页对象
+     * @param task        筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<Task> queryByPage(Task task, PageRequest pageRequest);
-
+    Map<String,Object> queryByPage(Task task, PageRequest pageRequest);
+    /**
+     *标签任务综合查询
+     * @return
+     */
+    List<TaskDTO> queryByTid(Task task, PageRequest pageRequest);
     /**
      * 新增数据
      *
      * @param task 实例对象
+     * @param id
      * @return 实例对象
      */
-    Task insert(Task task);
+    Task insert(Task task,Long id);
 
     /**
      * 修改数据
@@ -51,6 +59,6 @@ public interface TaskService {
      * @param tid 主键
      * @return 是否成功
      */
-    boolean deleteById(Long tid);
+    Map<String,Object> deleteById(Long tid);
 
 }

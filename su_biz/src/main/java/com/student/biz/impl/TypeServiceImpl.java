@@ -3,9 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.TypeService;
 import com.student.dao.mapper.TypeDao;
 import com.student.entity.Type;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,15 +32,15 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 分页查询
      *
-     * @param type 筛选条件
-     * @param pageRequest      分页对象
+     * @param type        筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<Type> queryByPage(Type type, PageRequest pageRequest) {
-        long total = this.typeDao.count(type);
-        return new PageImpl<>(this.typeDao.queryAllByLimit(type, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<Type> queryByPage(Type type, PageRequest pageRequest) {
+//        long total = this.typeDao.count(type);
+//        return new PageImpl<>(this.typeDao.queryAllByLimit(type, pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

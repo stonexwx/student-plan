@@ -2,8 +2,6 @@ package com.student.controller;
 
 import com.student.biz.FirstTypeService;
 import com.student.entity.FirstType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +29,10 @@ public class FirstTypeController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
-    public ResponseEntity<Page<FirstType>> queryByPage(FirstType firstType, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.firstTypeService.queryByPage(firstType, pageRequest));
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<FirstType>> queryByPage(FirstType firstType, PageRequest pageRequest) {
+//        return ResponseEntity.ok(this.firstTypeService.queryByPage(firstType, pageRequest));
+//    }
 
     /**
      * 通过主键查询单条数据

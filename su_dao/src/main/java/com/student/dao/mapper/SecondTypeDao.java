@@ -2,7 +2,6 @@ package com.student.dao.mapper;
 
 import com.student.entity.SecondType;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public interface SecondTypeDao {
      * @param pageable         分页对象
      * @return 对象列表
      */
-    List<SecondType> queryAllByLimit(SecondType secondType, @Param("pageable") Pageable pageable);
+//    List<SecondType> queryAllByLimit(SecondType secondType, @Param("pageable") Pageable pageable);
 
     /**
      * 统计总行数

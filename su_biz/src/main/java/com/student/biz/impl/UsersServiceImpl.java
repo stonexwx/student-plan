@@ -5,11 +5,11 @@ import com.student.dao.mapper.UsersDao;
 import com.student.entity.PageRequest;
 import com.student.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +23,8 @@ public class UsersServiceImpl implements UsersService {
     @Resource
     private UsersDao usersDao;
     @Autowired
-    HashMap<String,Object> map;
+    HashMap<String, Object> map;
+
     /**
      * 通过ID查询单条数据
      *
@@ -38,27 +39,30 @@ public class UsersServiceImpl implements UsersService {
     /**
      * 分页查询
      *
-     * @param users 筛选条件
-     * @param pageRequest      分页对象
+     * @param users       筛选条件
      * @return 查询结果
      */
     @Override
-    public Map<String,Object> queryByPage(Users users, PageRequest pageRequest) {
+    public Map<String, Object> queryByPage(Users users, PageRequest pageRequest) {
         long total = this.usersDao.count(users);
-        return new PageImpl<>(this.usersDao.queryAllByLimit(users, pageRequest), pageRequest, total);
+        map.put("flag",true);
+        map.put("data",this.usersDao.queryAllByLimit(users, pageRequest));
+        map.put("count",total);
+        return map;
     }
 
     @Override
     public Map<String, Object> queryByPhoneAndPassword(Users users) {
         long total = this.usersDao.count(users);
-        Users users1= (Users) this.usersDao.queryAllByLimit(users,new PageRequest());
-        if(users1!=null){
-            map.put("flag",true);
-            map.put("data",users1);
-            map.put("count",total);
+        List<Users> users1 = this.usersDao.queryAllByLimit(users, new PageRequest(1,10));
+
+        if (users1.size()>0) {
+            map.put("flag", true);
+            map.put("data", users1.get(0));
+            map.put("count", total);
             return map;
         }
-        map.put("flag",false);
+        map.put("flag", false);
         return map;
     }
 

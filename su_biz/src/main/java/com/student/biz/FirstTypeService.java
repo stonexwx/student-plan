@@ -1,8 +1,6 @@
 package com.student.biz;
 
 import com.student.entity.FirstType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 一级标题(FirstType)表服务接口
@@ -23,11 +21,11 @@ public interface FirstTypeService {
     /**
      * 分页查询
      *
-     * @param firstType 筛选条件
-     * @param pageRequest      分页对象
+     * @param firstType   筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<FirstType> queryByPage(FirstType firstType, PageRequest pageRequest);
+//    Page<FirstType> queryByPage(FirstType firstType, PageRequest pageRequest);
 
     /**
      * 新增数据

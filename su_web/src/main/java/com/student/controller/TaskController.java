@@ -1,9 +1,9 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.TaskService;
+import com.student.entity.PageRequest;
 import com.student.entity.Task;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +31,9 @@ public class TaskController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
-    public ResponseEntity<Page<Task>> queryByPage(Task task, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.taskService.queryByPage(task, pageRequest));
+    @PostMapping("select_id")
+    public String queryByPage(Task task, PageRequest pageRequest) {
+        return JSON.toJSONString(this.taskService.queryByTid(task, pageRequest));
     }
 
     /**
@@ -53,9 +53,9 @@ public class TaskController {
      * @param task 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Task> add(Task task) {
-        return ResponseEntity.ok(this.taskService.insert(task));
+    @PostMapping("insert")
+    public String add(Task task,Long id) {
+        return JSON.toJSONString(this.taskService.insert(task,id));
     }
 
     /**
@@ -64,20 +64,20 @@ public class TaskController {
      * @param task 实体
      * @return 编辑结果
      */
-    @PutMapping
-    public ResponseEntity<Task> edit(Task task) {
-        return ResponseEntity.ok(this.taskService.update(task));
+    @PostMapping ("update")
+    public String edit(Task task) {
+        return JSON.toJSONString(this.taskService.update(task));
     }
 
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param tid 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.taskService.deleteById(id));
+    @GetMapping("delete")
+    public String deleteById(Long tid) {
+        return JSON.toJSONString(this.taskService.deleteById(tid));
     }
 
 }

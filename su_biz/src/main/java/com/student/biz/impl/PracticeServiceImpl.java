@@ -3,9 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.PracticeService;
 import com.student.dao.mapper.PracticeDao;
 import com.student.entity.Practice;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,15 +32,15 @@ public class PracticeServiceImpl implements PracticeService {
     /**
      * 分页查询
      *
-     * @param practice 筛选条件
-     * @param pageRequest      分页对象
+     * @param practice    筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<Practice> queryByPage(Practice practice, PageRequest pageRequest) {
-        long total = this.practiceDao.count(practice);
-        return new PageImpl<>(this.practiceDao.queryAllByLimit(practice, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<Practice> queryByPage(Practice practice, PageRequest pageRequest) {
+//        long total = this.practiceDao.count(practice);
+//        return new PageImpl<>(this.practiceDao.queryAllByLimit(practice, pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

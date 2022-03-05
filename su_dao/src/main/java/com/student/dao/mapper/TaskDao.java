@@ -1,8 +1,9 @@
 package com.student.dao.mapper;
 
+import com.student.dto.TaskDTO;
+import com.student.entity.PageRequest;
 import com.student.entity.Task;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,11 +27,14 @@ public interface TaskDao {
      * 查询指定行数据
      *
      * @param task 查询条件
-     * @param pageable         分页对象
+     * @param pageRequest
      * @return 对象列表
      */
-    List<Task> queryAllByLimit(Task task, @Param("pageable") Pageable pageable);
-
+    List<Task> queryAllByLimit(@Param("task") Task task, @Param("pageable")PageRequest pageRequest);
+    /**
+     * 查询指定id数据以及标签
+     */
+    List<TaskDTO> queryAllById(@Param("task") Task task, @Param("pageable") PageRequest pageRequest);
     /**
      * 统计总行数
      *
@@ -45,7 +49,7 @@ public interface TaskDao {
      * @param task 实例对象
      * @return 影响行数
      */
-    int insert(Task task);
+    int insert(@Param("task") Task task);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）
@@ -70,7 +74,7 @@ public interface TaskDao {
      * @param task 实例对象
      * @return 影响行数
      */
-    int update(Task task);
+    int update(@Param("task") Task task);
 
     /**
      * 通过主键删除数据

@@ -1,9 +1,10 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.student.biz.UsersService;
+import com.student.entity.PageRequest;
 import com.student.entity.Users;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,20 +32,20 @@ public class UsersController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
-    public ResponseEntity<Page<Users>> queryByPage(Users users, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.usersService.queryByPage(users, pageRequest));
+    @PostMapping("select_all")
+    public String queryByPage(Users users, PageRequest pageRequest) {
+        return JSON.toJSONString(this.usersService.queryByPage(users, pageRequest));
     }
 
     /**
      * 通过主键查询单条数据
      *
-     * @param id 主键
+     * @param uid 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public ResponseEntity<Users> queryById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.usersService.queryById(id));
+    @GetMapping("select_id")
+    public String queryById(Long uid) {
+        return JSON.toJSONString(this.usersService.queryById(uid));
     }
 
     /**
@@ -64,20 +65,22 @@ public class UsersController {
      * @param users 实体
      * @return 编辑结果
      */
-    @PutMapping
-    public ResponseEntity<Users> edit(Users users) {
-        return ResponseEntity.ok(this.usersService.update(users));
+    @PostMapping("update")
+    public String edit(Users users) {
+        return JSON.toJSONString(this.usersService.update(users));
     }
 
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param uid 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.usersService.deleteById(id));
+    @GetMapping("delete")
+    public String deleteById(Long uid) {
+        JSONObject jsonObject =new JSONObject();
+        jsonObject.put("flag",this.usersService.deleteById(uid));
+        return jsonObject.toJSONString();
     }
 
 }

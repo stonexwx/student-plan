@@ -3,9 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.TypeMapperService;
 import com.student.dao.mapper.TypeMapperDao;
 import com.student.entity.TypeMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,15 +32,15 @@ public class TypeMapperServiceImpl implements TypeMapperService {
     /**
      * 分页查询
      *
-     * @param typeMapper 筛选条件
-     * @param pageRequest      分页对象
+     * @param typeMapper  筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<TypeMapper> queryByPage(TypeMapper typeMapper, PageRequest pageRequest) {
-        long total = this.typeMapperDao.count(typeMapper);
-        return new PageImpl<>(this.typeMapperDao.queryAllByLimit(typeMapper, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<TypeMapper> queryByPage(TypeMapper typeMapper, PageRequest pageRequest) {
+//        long total = this.typeMapperDao.count(typeMapper);
+//        return new PageImpl<>(this.typeMapperDao.queryAllByLimit(typeMapper, pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

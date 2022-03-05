@@ -1,8 +1,8 @@
 package com.student.dao.mapper;
 
 import com.student.entity.FirstType;
+import com.student.entity.PageRequest;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ public interface FirstTypeDao {
      * 查询指定行数据
      *
      * @param firstType 查询条件
-     * @param pageable         分页对象
+     * @param pageRequest 分页对象
      * @return 对象列表
      */
-    List<FirstType> queryAllByLimit(FirstType firstType, @Param("pageable") Pageable pageable);
+    List<FirstType> queryAllByLimit(FirstType firstType, @Param("page")PageRequest pageRequest);
 
     /**
      * 统计总行数

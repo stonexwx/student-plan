@@ -1,8 +1,6 @@
 package com.student.biz;
 
 import com.student.entity.Information;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 信息表(Information)表服务接口
@@ -24,10 +22,10 @@ public interface InformationService {
      * 分页查询
      *
      * @param information 筛选条件
-     * @param pageRequest      分页对象
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<Information> queryByPage(Information information, PageRequest pageRequest);
+//    Page<Information> queryByPage(Information information, PageRequest pageRequest);
 
     /**
      * 新增数据

@@ -3,9 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.InformationService;
 import com.student.dao.mapper.InformationDao;
 import com.student.entity.Information;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,11 +36,11 @@ public class InformationServiceImpl implements InformationService {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<Information> queryByPage(Information information, PageRequest pageRequest) {
-        long total = this.informationDao.count(information);
-        return new PageImpl<>(this.informationDao.queryAllByLimit(information, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<Information> queryByPage(Information information, PageRequest pageRequest) {
+//        long total = this.informationDao.count(information);
+//        return new PageImpl<>(this.informationDao.queryAllByLimit(information, , pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

@@ -1,8 +1,8 @@
 package com.student.dao.mapper;
 
 import com.student.entity.Course;
+import com.student.entity.PageRequest;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ public interface CourseDao {
      * 查询指定行数据
      *
      * @param course 查询条件
-     * @param pageable         分页对象
+     * @param pageRequest 分页条件
      * @return 对象列表
      */
-    List<Course> queryAllByLimit(Course course, @Param("pageable") Pageable pageable);
+    List<Course> queryAllByLimit(Course course, @Param("page")PageRequest pageRequest);
 
     /**
      * 统计总行数

@@ -1,14 +1,20 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.student.biz.CourseService;
 import com.student.entity.Course;
-import com.student.entity.PageRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.student.util.UploadUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 课程资料表(Course)表控制层
@@ -32,10 +38,10 @@ public class CourseController {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-    @GetMapping
-    public ResponseEntity<Page<Course>> queryByPage(Course course, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.courseService.queryByPage(course, pageRequest));
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<Course>> queryByPage(Course course, PageRequest pageRequest) {
+//        return ResponseEntity.ok(this.courseService.queryByPage(course, pageRequest));
+//    }
 
     /**
      * 通过主键查询单条数据
@@ -80,6 +86,32 @@ public class CourseController {
     public ResponseEntity<Boolean> deleteById(Long id) {
         return ResponseEntity.ok(this.courseService.deleteById(id));
     }
+    /**
+     * 文件上传
+     */
+    @PostMapping("upload")
+    public String upload(@RequestParam MultipartFile[] myfiles, HttpServletRequest request) throws IOException{
+        Map<String, Object> map = UploadUtil.fileUploadFileNameByDate(myfiles,request);
+        JSONObject jsonObject = getJsonObject(map);
+        return JSON.toJSONString(jsonObject);
+    }
 
+    /**
+     * 创建照片回调函数
+     * @param map
+     * @return
+     */
+    private JSONObject getJsonObject(Map<String, Object> map) {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        jsonObject.put("errno",0);
+        jsonObject2.put("url", map.get("photo"));
+        jsonObject2.put("alt","????");
+        jsonObject2.put("href","");
+        jsonArray.add(jsonObject2);
+        jsonObject.put("data",jsonArray);
+        return jsonObject;
+    }
 }
 

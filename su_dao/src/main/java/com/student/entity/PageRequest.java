@@ -4,6 +4,14 @@ public class PageRequest {
     private int page;
     private int limit;
 
+    public PageRequest(int page, int limit) {
+        this.page = page;
+        this.limit = limit;
+    }
+
+    public PageRequest() {
+    }
+
     public int getPage() {
         return  (page-1)*limit;
     }

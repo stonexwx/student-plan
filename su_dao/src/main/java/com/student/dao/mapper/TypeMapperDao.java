@@ -1,8 +1,8 @@
 package com.student.dao.mapper;
 
+import com.student.entity.PageRequest;
 import com.student.entity.TypeMapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ public interface TypeMapperDao {
      * 查询指定行数据
      *
      * @param typeMapper 查询条件
-     * @param pageable         分页对象
+     * @param pageRequest
      * @return 对象列表
      */
-    List<TypeMapper> queryAllByLimit(TypeMapper typeMapper, @Param("pageable") Pageable pageable);
+    List<TypeMapper> queryAllByLimit(TypeMapper typeMapper, @Param("pageable")PageRequest pageRequest);
 
     /**
      * 统计总行数
@@ -45,7 +45,7 @@ public interface TypeMapperDao {
      * @param typeMapper 实例对象
      * @return 影响行数
      */
-    int insert(TypeMapper typeMapper);
+    int insert(@Param("typeMapper") TypeMapper typeMapper);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）

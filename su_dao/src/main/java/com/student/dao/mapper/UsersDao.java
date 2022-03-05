@@ -20,7 +20,7 @@ public interface UsersDao {
      * @param uid 主键
      * @return 实例对象
      */
-    Users queryById(Long uid);
+    Users queryById(@Param("uid") Long uid);
 
     /**
      * 查询指定行数据
@@ -70,7 +70,7 @@ public interface UsersDao {
      * @param users 实例对象
      * @return 影响行数
      */
-    int update(Users users);
+    int update(@Param("user") Users users);
 
     /**
      * 通过主键删除数据

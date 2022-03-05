@@ -132,32 +132,32 @@
     <update id="update">
         update users
         <set>
-            <if test="userName != null and userName != ''">
-                user_name = #{userName},
+            <if test="user.userName != null and user.userName != ''">
+                user_name = #{user.userName},
             </if>
-            <if test="password != null and password != ''">
-                password = #{password},
+            <if test="user.password != null and user.password != ''">
+                password = #{user.password},
             </if>
-            <if test="phone != null and phone != ''">
-                phone = #{phone},
+            <if test="user.phone != null and user.phone != ''">
+                phone = #{user.phone},
             </if>
-            <if test="realName != null and realName != ''">
-                real_name = #{realName},
+            <if test="user.realName != null and user.realName != ''">
+                real_name = #{user.realName},
             </if>
-            <if test="age != null and age != ''">
-                age = #{age},
+            <if test="user.age != null and user.age != ''">
+                age = #{user.age},
             </if>
-            <if test="sex != null and sex != ''">
-                sex = #{sex},
+            <if test="user.sex != null and user.sex != ''">
+                sex = #{user.sex},
             </if>
-            <if test="roleId != null and roleId != ''">
+            <if test="user.roleId != null and user.roleId != ''">
                 role_id = #{roleId},
             </if>
-            <if test="addtime != null">
-                addtime = #{addtime},
+            <if test="user.addtime != null">
+                addtime = #{user.addtime},
             </if>
         </set>
-        where uid = #{uid}
+        where uid = #{user.uid}
     </update>
 
     <!--通过主键删除-->

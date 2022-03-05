@@ -1,8 +1,7 @@
 package com.student.biz;
 
+import com.student.entity.PageRequest;
 import com.student.entity.Users;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.Map;
 
@@ -25,16 +24,19 @@ public interface UsersService {
     /**
      * 分页查询
      *
-     * @param users 筛选条件
-     * @param pageRequest      分页对象
+     * @param users       筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<Users> queryByPage(Users users, PageRequest pageRequest);
+    Map<String,Object> queryByPage(Users users, PageRequest pageRequest);
+
     /**
      * 登录验证
+     *
      * @return
      */
-    Map<String,Object> queryByPhoneAndPassword(Users users);
+    Map<String, Object> queryByPhoneAndPassword(Users users);
+
     /**
      * 新增数据
      *

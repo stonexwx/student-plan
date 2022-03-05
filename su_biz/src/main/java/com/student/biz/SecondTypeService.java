@@ -1,8 +1,6 @@
 package com.student.biz;
 
 import com.student.entity.SecondType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 二级标题(SecondType)表服务接口
@@ -23,11 +21,11 @@ public interface SecondTypeService {
     /**
      * 分页查询
      *
-     * @param secondType 筛选条件
-     * @param pageRequest      分页对象
+     * @param secondType  筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<SecondType> queryByPage(SecondType secondType, PageRequest pageRequest);
+//    Page<SecondType> queryByPage(SecondType secondType, PageRequest pageRequest);
 
     /**
      * 新增数据

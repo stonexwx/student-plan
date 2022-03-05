@@ -1,8 +1,6 @@
 package com.student.biz;
 
 import com.student.entity.TypeMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 类型映射(TypeMapper)表服务接口
@@ -23,11 +21,11 @@ public interface TypeMapperService {
     /**
      * 分页查询
      *
-     * @param typeMapper 筛选条件
-     * @param pageRequest      分页对象
+     * @param typeMapper  筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<TypeMapper> queryByPage(TypeMapper typeMapper, PageRequest pageRequest);
+//    Page<TypeMapper> queryByPage(TypeMapper typeMapper, PageRequest pageRequest);
 
     /**
      * 新增数据

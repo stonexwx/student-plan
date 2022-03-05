@@ -25,26 +25,26 @@
           tid, uid, content, start_time, end_time, state
         from task
         <where>
-            <if test="tid != null">
-                and tid = #{tid}
+            <if test="task.tid != null">
+                and tid = #{task.tid}
             </if>
-            <if test="uid != null">
-                and uid = #{uid}
+            <if test="task.uid != null">
+                and uid = #{task.uid}
             </if>
-            <if test="content != null and content != ''">
-                and content = #{content}
+            <if test="task.content != null and task.content != ''">
+                and content = #{task.content}
             </if>
-            <if test="startTime != null">
-                and start_time = #{startTime}
+            <if test="task.startTime != null">
+                and start_time = #{task.startTime}
             </if>
-            <if test="endTime != null">
-                and end_time = #{endTime}
+            <if test="task.endTime != null">
+                and end_time = #{task.endTime}
             </if>
-            <if test="state != null and state != ''">
-                and state = #{state}
+            <if test="task.state != null and task.state != ''">
+                and state = #{task.state}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{pageable.page}, #{pageable.limit}
     </select>
 
     <!--统计总行数-->
@@ -72,11 +72,38 @@
             </if>
         </where>
     </select>
+    <resultMap id="TaskDTOMap" type="com.student.dto.TaskDTO">
+        <result property="task.tid" column="tid" jdbcType="INTEGER"/>
+        <result property="task.uid" column="uid" jdbcType="INTEGER"/>
+        <result property="task.content" column="content" jdbcType="VARCHAR"/>
+        <result property="task.startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="task.endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="task.state" column="state" jdbcType="VARCHAR"/>
+        <result property="type.id" column="id" jdbcType="INTEGER"/>
+        <result property="type.name" column="name" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="queryAllById" resultMap="TaskDTOMap">
+        SELECT
+            task.*,
+            type.id,
+            type.`name`
+        FROM
+            type
+                INNER JOIN
+            type_mapper
+            ON
+                type.id = type_mapper.type_id
+                INNER JOIN
+            task
+            ON
+                type_mapper.tid = task.tid
+            limit #{pageable.page},#{pageable.limit}
+    </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="tid" useGeneratedKeys="true">
         insert into task(uid, content, start_time, end_time, state)
-        values (#{uid}, #{content}, #{startTime}, #{endTime}, #{state})
+        values (#{task.uid}, #{task.content}, #{task.startTime}, #{task.endTime}, '1')
     </insert>
 
     <insert id="insertBatch" keyProperty="tid" useGeneratedKeys="true">
@@ -105,23 +132,23 @@
     <update id="update">
         update task
         <set>
-            <if test="uid != null">
-                uid = #{uid},
+            <if test="task.uid != null">
+                uid = #{task.uid},
             </if>
-            <if test="content != null and content != ''">
-                content = #{content},
+            <if test="task.content != null and task.content != ''">
+                content = #{task.content},
             </if>
-            <if test="startTime != null">
-                start_time = #{startTime},
+            <if test="task.startTime != null">
+                start_time = #{task.startTime},
             </if>
-            <if test="endTime != null">
-                end_time = #{endTime},
+            <if test="task.endTime != null">
+                end_time = #{task.endTime},
             </if>
-            <if test="state != null and state != ''">
-                state = #{state},
+            <if test="task.state != null and task.state != ''">
+                state = #{task.state},
             </if>
         </set>
-        where tid = #{tid}
+        where tid = #{task.tid}
     </update>
 
     <!--通过主键删除-->

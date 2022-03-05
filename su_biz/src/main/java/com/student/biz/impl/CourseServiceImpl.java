@@ -3,12 +3,11 @@ package com.student.biz.impl;
 import com.student.biz.CourseService;
 import com.student.dao.mapper.CourseDao;
 import com.student.entity.Course;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import com.student.entity.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 课程资料表(Course)表服务实现类
@@ -32,6 +31,11 @@ public class CourseServiceImpl implements CourseService {
         return this.courseDao.queryById(id);
     }
 
+    @Override
+    public Map<String, Object> queryByPage(Course course, PageRequest pageRequest) {
+        return null;
+    }
+
     /**
      * 分页查询
      *
@@ -39,11 +43,11 @@ public class CourseServiceImpl implements CourseService {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @Override
-    public Page<Course> queryByPage(Course course, PageRequest pageRequest) {
-        long total = this.courseDao.count(course);
-        return new PageImpl<>(this.courseDao.queryAllByLimit(course, pageRequest), pageRequest, total);
-    }
+//    @Override
+//    public Page<Course> queryByPage(Course course, PageRequest pageRequest) {
+//        long total = this.courseDao.count(course);
+//        return new PageImpl<>(this.courseDao.queryAllByLimit(course, pageRequest), pageRequest, total);
+//    }
 
     /**
      * 新增数据

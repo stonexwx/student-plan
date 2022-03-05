@@ -1,8 +1,6 @@
 package com.student.biz;
 
 import com.student.entity.Type;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 标签表(Type)表服务接口
@@ -23,11 +21,11 @@ public interface TypeService {
     /**
      * 分页查询
      *
-     * @param type 筛选条件
-     * @param pageRequest      分页对象
+     * @param type        筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<Type> queryByPage(Type type, PageRequest pageRequest);
+//    Page<Type> queryByPage(Type type, PageRequest pageRequest);
 
     /**
      * 新增数据

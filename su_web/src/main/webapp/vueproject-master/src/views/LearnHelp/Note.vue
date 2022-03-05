@@ -23,9 +23,7 @@
               >
             </el-form-item>
             <el-form-item label="笔记详情">
-              <span style="color: #5aacff; font-weight: bold">{{
-                props.row.content
-              }}</span>
+              <span style="color: #5aacff; font-weight: bold" v-html="props.row.content"></span>
             </el-form-item>
           </el-form>
         </template>
@@ -55,8 +53,9 @@
     <!-- 以下为富文本部分 -->
     <!-- 目前富文本版本为V4 交给你了 -->
     <!-- demo1为富文本容器 -->
+    <home></home>
 
-    <div id="demo1"></div>
+
     <div class="Notefooter">
       <el-select v-model="value" placeholder="请选择标签">
         <el-option
@@ -74,14 +73,11 @@
 
 <script>
 import { NoteAndHelpList, TagsList, NoteAndHelpDel } from "../../api/basisMG";
-import wangEditor from "wangeditor";
+import home from "./Home";
 export default {
+  components: {home},
   data() {
     return {
-      //editor
-      editor: null,
-      editorData: "",
-      dialogFormVisible: false,
       //笔记模拟数据
       NoteData: [
         {
@@ -99,7 +95,7 @@ export default {
           iid: "113",
           name: "英语",
           content:
-            "One reason is that Americans view business as being more firmly based on the ideal of competition than other institutions in society. Since competition is seen as the major source of progress and prosperity by most Americans, competitive business institutions are respected. Competition is not only good in itself, it is the means by which other basic American values such as individual freedom, equality of opportunity, and hard work are protected.",
+            "<ul class=\"w-e-todo\"><li><span contenteditable=\"false\"><input type=\"checkbox\"/></span>若干个人工😇</li></ul>r institutions in society. Since competition is seen as the major source of progress and prosperity by most Americans, competitive business institutions are respected. Competition is not only good in itself, it is the means by which other basic American values such as individual freedom, equality of opportunity, and hard work are protected.",
         },
       ],
       options: [
@@ -140,17 +136,6 @@ export default {
         this.$message.error("请求失败，请稍后再试！");
       });
   },
-  mounted() {
-    //配置editor
-    const editor = new wangEditor("#demo1");
-    // 配置 onchange 回调函数，将数据同步到 vue 中
-    editor.config.onchange = (newHtml) => {
-      this.editorData = newHtml;
-    };
-    // 创建编辑器
-    editor.create();
-    this.editor = editor;
-  },
   methods: {
     //获取所有笔记
     getNoteData(type, uid) {
@@ -182,17 +167,6 @@ export default {
         .catch((err) => {
           this.$message.error("请求失败，请稍后再试！");
         });
-    },
-    //富文本方法一
-    // getEditorData() {
-    //   // 通过代码获取编辑器内容
-    //   let data = this.editor.txt.html();
-    //   alert(data);
-    // },
-    beforeDestroy() {
-      // 调用销毁 API 对当前编辑器实例进行销毁
-      this.editor.destroy();
-      this.editor = null;
     },
   },
 };
@@ -258,7 +232,6 @@ a {
 }
 </style>
 
- 
- 
 
- 
+
+
