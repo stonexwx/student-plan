@@ -2,10 +2,15 @@ package com.student.biz.impl;
 
 import com.student.biz.TypeService;
 import com.student.dao.mapper.TypeDao;
+import com.student.entity.PageRequest;
 import com.student.entity.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 标签表(Type)表服务实现类
@@ -18,6 +23,8 @@ public class TypeServiceImpl implements TypeService {
     @Resource
     private TypeDao typeDao;
 
+    @Autowired
+    private HashMap<String,Object> map;
     /**
      * 通过ID查询单条数据
      *
@@ -36,11 +43,15 @@ public class TypeServiceImpl implements TypeService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    @Override
-//    public Page<Type> queryByPage(Type type, PageRequest pageRequest) {
-//        long total = this.typeDao.count(type);
-//        return new PageImpl<>(this.typeDao.queryAllByLimit(type, pageRequest), pageRequest, total);
-//    }
+    @Override
+    public Map<String,Object> queryByPage(Type type, PageRequest pageRequest) {
+        long total = this.typeDao.count(type);
+        List<Type> list = this.typeDao.queryAllByLimit(type,pageRequest);
+        map.put("flag",list.size()>0);
+        map.put("data",list);
+        map.put("count",total);
+        return map;
+    }
 
     /**
      * 新增数据
@@ -73,7 +84,8 @@ public class TypeServiceImpl implements TypeService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long id) {
-        return this.typeDao.deleteById(id) > 0;
+    public Map<String, Object> deleteById(Long id) {
+        map.put("flag",this.typeDao.deleteById(id) > 0);
+        return map;
     }
 }

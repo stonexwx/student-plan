@@ -1,6 +1,5 @@
 package com.student.util;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,11 +11,12 @@ import java.util.*;
 public class UploadUtil {
     //在src/main/webapp下新建文件夹的名字
     private static final String uploadFileName = "upload";
-    public static Map<String,Object> fileUploadFileNameByDate(MultipartFile[] myfiles, HttpServletRequest request) {
+    public static Map<String, List<String>> fileUploadFileNameByDate(MultipartFile[] myfiles, HttpServletRequest request) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        Map<String,Object> filesName = new HashMap<>();
-        List<String> filesNames = new ArrayList<>();
+        Map<String,List<String>> filesName = new HashMap<>();
+        List<String> photo = new ArrayList<>();
+        List<String> video = new ArrayList<>();
         String strDate = sdf.format(date);
         for (MultipartFile file : myfiles) {
             // 此处MultipartFile[]表明是多文件,如果是单文件MultipartFile就行了
@@ -40,12 +40,14 @@ public class UploadUtil {
                 try {
                     file.transferTo(localFile);
                     if(Arrays.binarySearch(MimeTypeUtils.IMAGE_EXTENSION,fileNameSuffix)>0){
-                        filesName.put("photo",request.getScheme() + "://" + request.getServerName()
+                        photo.add(request.getScheme() + "://" + request.getServerName()
                                 + ":" + request.getServerPort() + "/upload/" + finalFileName);
+                        filesName.put("photo",photo);
                     }
                     if(Arrays.binarySearch(MimeTypeUtils.VIDEO_EXTENSION,fileNameSuffix)>0){
-                        filesName.put("video",request.getServerName()
+                        video.add(request.getServerName()
                                 + ":" + request.getServerPort() + "/upload/" + finalFileName);
+                        filesName.put("video",video);
                     }
                 } catch (IllegalStateException | IOException e) {
                     e.printStackTrace();

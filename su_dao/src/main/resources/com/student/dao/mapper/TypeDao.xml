@@ -22,17 +22,17 @@
           id, name, uid
         from type
         <where>
-            <if test="id != null">
-                and id = #{id}
+            <if test="type.id != null">
+                and id = #{type.id}
             </if>
-            <if test="name != null and name != ''">
-                and name = #{name}
+            <if test="type.name != null and type.name != ''">
+                and name = #{type.name}
             </if>
-            <if test="uid != null">
-                and uid = #{uid}
+            <if test="type.uid != null">
+                and uid = #{type.uid}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{pageable.page}, #{pageable.limit}
     </select>
 
     <!--统计总行数-->

@@ -1,6 +1,9 @@
 package com.student.biz;
 
+import com.student.entity.PageRequest;
 import com.student.entity.Type;
+
+import java.util.Map;
 
 /**
  * 标签表(Type)表服务接口
@@ -25,7 +28,7 @@ public interface TypeService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    Page<Type> queryByPage(Type type, PageRequest pageRequest);
+    Map<String,Object> queryByPage(Type type, PageRequest pageRequest);
 
     /**
      * 新增数据
@@ -49,6 +52,6 @@ public interface TypeService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Long id);
+    Map<String,Object> deleteById(Long id);
 
 }

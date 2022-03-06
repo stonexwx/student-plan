@@ -1,6 +1,8 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.TypeService;
+import com.student.entity.PageRequest;
 import com.student.entity.Type;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +31,10 @@ public class TypeController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-//    @GetMapping
-//    public ResponseEntity<Page<Type>> queryByPage(Type type, PageRequest pageRequest) {
-//        return ResponseEntity.ok(this.typeService.queryByPage(type, pageRequest));
-//    }
+    @PostMapping("select_all")
+    public String queryByPage(Type type, PageRequest pageRequest) {
+        return JSON.toJSONString(this.typeService.queryByPage(type, pageRequest));
+    }
 
     /**
      * 通过主键查询单条数据
@@ -51,9 +53,9 @@ public class TypeController {
      * @param type 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Type> add(Type type) {
-        return ResponseEntity.ok(this.typeService.insert(type));
+    @PostMapping("insert")
+    public String add(Type type) {
+        return JSON.toJSONString(this.typeService.insert(type));
     }
 
     /**
@@ -73,9 +75,9 @@ public class TypeController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.typeService.deleteById(id));
+    @GetMapping("delete")
+    public String deleteById(Long id) {
+        return JSON.toJSONString(this.typeService.deleteById(id));
     }
 
 }

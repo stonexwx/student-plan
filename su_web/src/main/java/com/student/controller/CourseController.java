@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,10 +91,17 @@ public class CourseController {
      * 文件上传
      */
     @PostMapping("upload")
-    public String upload(@RequestParam MultipartFile[] myfiles, HttpServletRequest request) throws IOException{
-        Map<String, Object> map = UploadUtil.fileUploadFileNameByDate(myfiles,request);
-        JSONObject jsonObject = getJsonObject(map);
-        return JSON.toJSONString(jsonObject);
+    public String upload(Course course,@RequestParam MultipartFile[] files, HttpServletRequest request) throws IOException{
+        Map<String, List<String>> map = UploadUtil.fileUploadFileNameByDate(files,request);
+        List<String> photo = map.get("photo");
+        List<String> video = map.get("video");
+        if(video != null && video.size()>0) {
+            course.setVideo(video.get(0));
+        }
+        if(photo != null && photo.size()>0) {
+            course.setPhoto(photo.get(0));
+        }
+        return JSON.toJSONString(courseService.insert(course));
     }
 
     /**
@@ -101,7 +109,7 @@ public class CourseController {
      * @param map
      * @return
      */
-    private JSONObject getJsonObject(Map<String, Object> map) {
+    private JSONObject getJsonObject(Map<String, List<String>> map) {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
         JSONArray jsonArray = new JSONArray();

@@ -235,7 +235,7 @@ export default {
     const userdata = {
       role_id:"1"
     }
-    if (userdata.role_id == "0") {
+    if (userdata.role_id == "1") {
       this.allmenu = res.Mandata;
     } else {
       this.allmenu = res.data;

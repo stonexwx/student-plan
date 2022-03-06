@@ -4,9 +4,11 @@ import com.student.biz.CourseService;
 import com.student.dao.mapper.CourseDao;
 import com.student.entity.Course;
 import com.student.entity.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,7 +21,8 @@ import java.util.Map;
 public class CourseServiceImpl implements CourseService {
     @Resource
     private CourseDao courseDao;
-
+    @Autowired
+    private HashMap<String,Object> map;
     /**
      * 通过ID查询单条数据
      *

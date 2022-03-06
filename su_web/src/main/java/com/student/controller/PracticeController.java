@@ -1,5 +1,6 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.PracticeService;
 import com.student.entity.Practice;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +52,9 @@ public class PracticeController {
      * @param practice 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Practice> add(Practice practice) {
-        return ResponseEntity.ok(this.practiceService.insert(practice));
+    @PostMapping("insert")
+    public String add(Practice practice) {
+        return JSON.toJSONString(this.practiceService.insert(practice));
     }
 
     /**
