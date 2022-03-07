@@ -154,7 +154,7 @@ export default {
       //二级标题id
       sid: this.$route.query.sid,
       //用户角色
-      role: false,
+      role: true,
       //课程信息
       CourseData: [
         {

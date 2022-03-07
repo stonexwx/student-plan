@@ -1,5 +1,6 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.FirstTypeService;
 import com.student.entity.FirstType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class FirstTypeController {
 //        return ResponseEntity.ok(this.firstTypeService.queryByPage(firstType, pageRequest));
 //    }
 
+    /**
+     * 联级查询
+     */
+    @PostMapping("selectAll")
+    public String queryAll(){
+        return JSON.toJSONString(this.firstTypeService.queryAll());
+    }
     /**
      * 通过主键查询单条数据
      *

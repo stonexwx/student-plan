@@ -21,14 +21,14 @@
           fid, content
         from first_type
         <where>
-            <if test="fid != null">
-                and fid = #{fid}
+            <if test="first.fid != null">
+                and fid = #{first.fid}
             </if>
-            <if test="content != null and content != ''">
-                and content = #{content}
+            <if test="first.content != null and first.content != ''">
+                and content = #{first.content}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{page.page}, #{page.limit}
     </select>
 
     <!--统计总行数-->
@@ -43,6 +43,9 @@
                 and content = #{content}
             </if>
         </where>
+    </select>
+    <select id="queryAllNO" resultType="com.student.entity.FirstType">
+        select * from first_type
     </select>
 
     <!--新增所有列-->

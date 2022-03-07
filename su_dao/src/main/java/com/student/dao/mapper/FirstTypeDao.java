@@ -29,8 +29,11 @@ public interface FirstTypeDao {
      * @param pageRequest 分页对象
      * @return 对象列表
      */
-    List<FirstType> queryAllByLimit(FirstType firstType, @Param("page")PageRequest pageRequest);
-
+    List<FirstType> queryAllByLimit(@Param("first") FirstType firstType, @Param("page")PageRequest pageRequest);
+    /**
+     * 查询所有
+     */
+    List<FirstType> queryAllNO();
     /**
      * 统计总行数
      *

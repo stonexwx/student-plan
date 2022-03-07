@@ -30,7 +30,7 @@ export const ManTagAdd = (params) => { return req("post", "/type/insert", params
  *学习管理
  **/
 // 标签管理-获取所有一级二级标签
-export const TitleList = () => { return req("post", "/firstType/selectAll") };
+export const TitleList = (params) => { return req("post", "/firstType/selectAll",params) };
 // 题库管理-获取标签下题目
 export const TestList = (params) => { return req("post", "/firstType/selectAll",params) };
 // 题库管理-删除题库(管理员)

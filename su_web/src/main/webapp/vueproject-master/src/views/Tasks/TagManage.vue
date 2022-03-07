@@ -15,44 +15,21 @@
       style="margin: 30px 0 0px 0px"
       >点击添加标签</el-button
     >
-    <el-dialog title="添加标签" :visible.sync="dialogFormVisible">
-      <el-select
-        v-model="addTitleData.title"
-        filterable
-        allow-create
-        default-first-option
-        placeholder="请选择或创建一级标签"
-      >
-        <el-option
-          v-for="item in tableData"
-          :key="item.fid"
-          :label="item.title"
-          :value="item.title"
-        >
-        </el-option>
-      </el-select>
-      <el-input
-        v-model="addTitleData.content"
-        placeholder="请输入二级标签"
-        style="width: 450px; margin-left: 20px"
-      ></el-input>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit()">确 定</el-button>
-      </div>
+    <el-dialog title="添加标签" :visible.sync="dialogFormVisible" @close="dialogClose">
+      <tag-insert></tag-insert>
     </el-dialog>
 
     <div class="tagPage">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="标签id号" width="180">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.fid }}</span>
+            <span style="margin-left: 10px">{{ scope.row.father.fid }}</span>
           </template>
         </el-table-column>
         <el-table-column label="一级标签" width="200">
           <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.title }}</el-tag>
+              <el-tag size="medium">{{ scope.row.father.title }}</el-tag>
             </div>
           </template>
         </el-table-column>
@@ -87,14 +64,17 @@
 
 <script>
 import { ManTagAdd, TitleList, TagDel } from "../../api/basisMG";
+import TagInsert from "./TagInsert";
 export default {
   data() {
     return {
       //模拟数据
       tableData: [
         {
-          fid: "1",
-          title: "文科",
+          father: {
+            fid: "1",
+            title: "文科",
+          },
           child: [
             {
               sid: "1",
@@ -126,38 +106,38 @@ export default {
             },
           ],
         },
-        {
-          fid: "2",
-          title: "编程",
-          child: [
-            {
-              sid: "1",
-              content: "C",
-            },
-            {
-              sid: "2",
-              content: "Java",
-            },
-            {
-              sid: "21",
-              content: "Python",
-            },
-          ],
-        },
-        {
-          fid: "3",
-          title: "天杀的",
-          child: [
-            {
-              sid: "1",
-              content: "数学",
-            },
-            {
-              sid: "2",
-              content: "物理",
-            },
-          ],
-        },
+        // {
+        //   fid: "2",
+        //   title: "编程",
+        //   child: [
+        //     {
+        //       sid: "1",
+        //       content: "C",
+        //     },
+        //     {
+        //       sid: "2",
+        //       content: "Java",
+        //     },
+        //     {
+        //       sid: "21",
+        //       content: "Python",
+        //     },
+        //   ],
+        // },
+        // {
+        //   fid: "3",
+        //   title: "天杀的",
+        //   child: [
+        //     {
+        //       sid: "1",
+        //       content: "数学",
+        //     },
+        //     {
+        //       sid: "2",
+        //       content: "物理",
+        //     },
+        //   ],
+        // },
       ],
       //控制面板展开
       dialogFormVisible: false,
@@ -176,33 +156,10 @@ export default {
   },
   methods: {
     //保存表单
-    onSubmit() {
-      // 请求方法
-      var titlelist = [this.addTitleData.title, this.addTitleData.content];
-      console.log(titlelist);
-      if (this.addTitleData.title == "") {
-        this.$message.error("您没有输入一级标题");
-      } else {
-        //正式请求后注释下面这两行
-        // this.$message.success("okok");
-        // this.dialogFormVisible = false;
-
-        ManTagAdd(titlelist)
-          .then((res) => {
-            if (res.success) {
-              //重新查询所有标签
-              this.getData();
-              this.$message.success("标签刷新成功！");
-              this.dialogFormVisible = false;
-            } else {
-              this.$message.error("标签添加失败");
-            }
-          })
-          .catch((err) => {
-            this.$message.error("(未请求)");
-          });
-      }
+    dialogClose(){
+      this.getData()
     },
+
     //标签颜色随机选择
     colorShift(min, max) {
       var num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -278,6 +235,7 @@ export default {
   },
   // 注册组件
   components: {
+    TagInsert
   },
 };
 </script>

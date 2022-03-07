@@ -29,7 +29,10 @@ public interface SecondTypeDao {
      * @return 对象列表
      */
 //    List<SecondType> queryAllByLimit(SecondType secondType, @Param("pageable") Pageable pageable);
-
+    /**
+     * 更具fid查询
+     */
+    List<SecondType> queryAllByFid(Long fid);
     /**
      * 统计总行数
      *

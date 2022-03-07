@@ -51,6 +51,9 @@
             </if>
         </where>
     </select>
+    <select id="queryAllByFid" resultType="com.student.entity.SecondType">
+        select * from second_type where fid = #{fid}
+    </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="sid" useGeneratedKeys="true">

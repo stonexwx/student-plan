@@ -1,5 +1,6 @@
 package com.student.biz;
 
+import com.alibaba.fastjson.JSONArray;
 import com.student.entity.FirstType;
 
 /**
@@ -26,7 +27,11 @@ public interface FirstTypeService {
      * @return 查询结果
      */
 //    Page<FirstType> queryByPage(FirstType firstType, PageRequest pageRequest);
-
+    /**
+     * 联级查询
+     * @return
+     */
+    JSONArray queryAll();
     /**
      * 新增数据
      *
