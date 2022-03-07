@@ -2,6 +2,8 @@ package com.student.biz;
 
 import com.student.entity.SecondType;
 
+import java.util.Map;
+
 /**
  * 二级标题(SecondType)表服务接口
  *
@@ -49,6 +51,6 @@ public interface SecondTypeService {
      * @param sid 主键
      * @return 是否成功
      */
-    boolean deleteById(Long sid);
+    Map<String,Object> deleteById(Long sid);
 
 }

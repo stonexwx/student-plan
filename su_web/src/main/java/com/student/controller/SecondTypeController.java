@@ -1,5 +1,6 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.SecondTypeService;
 import com.student.entity.SecondType;
 import org.springframework.http.ResponseEntity;
@@ -70,12 +71,12 @@ public class SecondTypeController {
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param sid 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.secondTypeService.deleteById(id));
+    @GetMapping("delete")
+    public String deleteById(Long sid) {
+        return JSON.toJSONString(this.secondTypeService.deleteById(sid));
     }
 
 }

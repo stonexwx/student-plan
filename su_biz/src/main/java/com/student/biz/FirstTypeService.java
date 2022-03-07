@@ -3,6 +3,8 @@ package com.student.biz;
 import com.alibaba.fastjson.JSONArray;
 import com.student.entity.FirstType;
 
+import java.util.Map;
+
 /**
  * 一级标题(FirstType)表服务接口
  *
@@ -54,6 +56,6 @@ public interface FirstTypeService {
      * @param fid 主键
      * @return 是否成功
      */
-    boolean deleteById(Long fid);
+    Map<String,Object> deleteById(Long fid);
 
 }

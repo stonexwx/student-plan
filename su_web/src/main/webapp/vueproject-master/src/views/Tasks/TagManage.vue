@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { ManTagAdd, TitleList, TagDel } from "../../api/basisMG";
+import {ManTagAdd, TitleList, TagDel, TagDelAdmin} from "../../api/basisMG";
 import TagInsert from "./TagInsert";
 export default {
   data() {
@@ -168,10 +168,10 @@ export default {
     },
     //二级标签删除
     handleClose(tag, array, sid) {
-      array.splice(array.indexOf(tag), 1);
-      TagDel(sid)
+      let data = {"sid":sid}
+      TagDelAdmin(data)
         .then((res) => {
-          if (res.data.flag) {
+          if (res.flag) {
             //重新查询所有标签
             this.getData();
             this.$message.success("您的二级标签已删除，剩余标签刷新成功！");

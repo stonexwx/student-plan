@@ -6,6 +6,8 @@ import com.student.entity.SecondType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 二级标题(SecondType)表服务实现类
@@ -73,7 +75,9 @@ public class SecondTypeServiceImpl implements SecondTypeService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long sid) {
-        return this.secondTypeDao.deleteById(sid) > 0;
+    public Map<String, Object> deleteById(Long sid) {
+        Map<String,Object> map =new HashMap<String,Object>();
+        map.put("flag",this.secondTypeDao.deleteById(sid) > 0);
+        return map ;
     }
 }

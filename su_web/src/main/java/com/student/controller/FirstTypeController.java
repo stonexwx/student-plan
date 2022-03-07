@@ -78,12 +78,12 @@ public class FirstTypeController {
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param fid 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.firstTypeService.deleteById(id));
+    @GetMapping("/delete")
+    public String deleteById(Long fid) {
+        return JSON.toJSONString(this.firstTypeService.deleteById(fid));
     }
 
 }

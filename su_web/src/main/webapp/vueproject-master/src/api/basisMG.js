@@ -22,9 +22,10 @@ export const TagsList = (params) => { return req("post", "/type/select_all", par
 //标签管理-增加标签
 export const TagAdd = (params) => { return req("post", "/type/insert", params) };
 //标签管理-删除标签
-export const TagDel = (params) => { return req("post", "/type/delete", params) };
+export const TagDel = (params) => { return req("get", "/type/delete", params) };
+export const TagDelAdmin = (params) => { return req("get", "/type/delete", params) };
 //标签管理-增加标签(管理员)
-export const ManTagAdd = (params) => { return req("post", "/type/insert", params) };
+export const ManTagAdd = (params) => { return req("post", "/admin_type/insert", params) };
 
 /**
  *学习管理

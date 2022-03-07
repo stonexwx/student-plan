@@ -10,7 +10,9 @@ import com.student.entity.SecondType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 一级标题(FirstType)表服务实现类
@@ -102,7 +104,9 @@ public class FirstTypeServiceImpl implements FirstTypeService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long fid) {
-        return this.firstTypeDao.deleteById(fid) > 0;
+    public Map<String, Object> deleteById(Long fid) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("flag",this.firstTypeDao.deleteById(fid) > 0);
+        return result;
     }
 }
