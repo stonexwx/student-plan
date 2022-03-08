@@ -5,10 +5,10 @@
   <div>
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item
-        :title="item.title"
-        :name="item.fid"
+        :title="item.father.title"
+        :name="item.father.fid"
         v-for="item in Title"
-        :key="item.fid"
+        :key="item.father.fid"
       >
         <el-card shadow="hover" v-for="item1 in item.child" :key="item1.sid">
           <!-- 前往题库 -->
@@ -73,7 +73,6 @@ a {
 }
 </style>
 
- 
- 
 
- 
+
+

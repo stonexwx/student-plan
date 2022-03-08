@@ -1,6 +1,6 @@
 /**
- * 自主学习 课程 (管理员和用户公用)
- */
+* 自主学习 课程 (管理员和用户公用)
+*/
 <template>
   <div>
     <!-- 面包屑导航 -->
@@ -14,13 +14,14 @@
       @click="dialogFormVisible = true"
       style="margin: 30px 0 0px 0px"
       v-if="role"
-      >点击添加课程</el-button
+    >点击添加课程
+    </el-button
     >
     <el-divider></el-divider>
 
     <!-- 课程表格 -->
     <el-table :data="CourseData" style="width: 100%; margin-top: 40px">
-      <el-table-column prop="id" label="课程id" width="80"> </el-table-column>
+      <el-table-column prop="id" label="课程id" width="80"></el-table-column>
       <el-table-column prop="name" label="课程名" width="380">
       </el-table-column>
       <el-table-column prop="content" label="课程简介" width="580">
@@ -31,23 +32,36 @@
             type="danger"
             v-if="role"
             @click="deleteCourse(scope.row.id)"
-            >点击删除</el-button
+          >点击删除
+          </el-button
           >
           <el-button
             type="success"
             v-if="!role"
             @click="goVideo(scope.row.video)"
-            >点击上课</el-button
+          >点击上课
+          </el-button
           >
         </template>
       </el-table-column>
     </el-table>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
 
     <!-- 点击添加展开面板 -->
     <el-dialog title="添加课程" :visible.sync="dialogFormVisible">
       <el-form :model="CourseList">
         <el-form-item label="名称">
-          <el-input v-model="CourseList.course_name"></el-input>
+          <el-input v-model="CourseList.courseName"></el-input>
         </el-form-item>
         <el-form-item label="简介">
           <el-input v-model="CourseList.content"></el-input>
@@ -55,15 +69,20 @@
         <el-form-item label="视频上传" prop="Video">
           <el-upload
             class="upload-demo"
-            drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple
+            ref="upload"
+            action="http://localhost:8080/course/upload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="handUploadSuccess"
+            :file-list="fileList"
+            :auto-upload="true"
+            :limit="1"
+            :on-exceed="handleExceed"
+            accept=".mp4,.mkv,.avi,.rmvb"
+            name="files"
           >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或<em>点击上传</em>
-            </div>
-            <div class="el-upload__tip" slot="tip">提示提示</div>
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传mp4/mkv/avi/rmvb文件，且不超过1GB</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -81,17 +100,35 @@
 </template>
 
 <script>
-import { CourseDel, CourseList } from "../../api/basisMG.js";
+import {CourseDel, CourseInsert, CourseList} from "../../api/basisMG.js";
+
 export default {
   methods: {
+    handUploadSuccess(response, file, fileList){
+      this.CourseList.video = response[0]
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getCourseData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getCourseData()
+    },
     //获取课程数据
     getCourseData() {
       // alert(this.sid);
       //this.sid为路由中携带的二级标题参数
-      CourseList(this.sid)
+      let data = {
+        "sid": this.sid,
+        "page": this.pagination.currentPage,
+        "limit": this.pagination.size
+      }
+      CourseList(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             this.CourseData = res.data;
+            this.pagination.total = res.count
             this.$message.success("课程刷新成功");
           } else {
             this.$message.error("课程刷新失败");
@@ -104,9 +141,12 @@ export default {
     //删除课程
     deleteCourse(id) {
       // alert(id);
-      CourseDel(id)
+      let data={
+        "id":id
+      }
+      CourseDel(data)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
             this.$message.success("课程删除成功");
             //重新获取课程数据
             this.getCourseData();
@@ -122,8 +162,32 @@ export default {
     onSubmit() {
       //关闭面板
       this.dialogFormVisible = false;
+      const userdata = localStorage.getItem("userdata");
+      let id = JSON.parse(userdata);
+      let data = {
+        "uid":id.uid,
+        "sid":this.sid,
+        "courseName":this.CourseList.courseName,
+        "content":this.CourseList.content,
+        "video":"http://"+this.CourseList.video
+      }
+
+      CourseInsert(data)
+        .then((res) => {
+        if(res){
+
+          this.$message.success("上传成功")
+          this.getCourseData()
+        }else {
+          this.$message.error("上传失败")
+        }
+      })
+      .catch((err)=>{
+        this.$message.error("(未请求)");
+        }
+      )
     },
-    //点击上课 目前无效
+    //点击上课
     goVideo(video) {
       this.showVideo = true;
       this.videoUrl = video;
@@ -135,16 +199,23 @@ export default {
       //   this.$refs.videoPlay.load();
       // });
     },
+
+    handleRemove(file, fileList) {
+      file.response[0]=null
+      this.CourseList.video=""
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(){
+      this.$message.error("一次只能上传一个视频哦")
+    }
   },
   created() {
     const userdata = localStorage.getItem("userdata");
+    let id = JSON.parse(userdata);
     //判断不同的用户角色 显示不同的按钮
-    // if(userdata.role_id == "0"){
-    //   //判断用户是否为管理员 0为管理员
-    //     this.role = true;
-    // }else{
-    //   this.role = false;
-    // }
+    this.role = id.roleId == "0";
     this.getCourseData();
   },
   data() {
@@ -156,38 +227,25 @@ export default {
       //用户角色
       role: true,
       //课程信息
-      CourseData: [
-        {
-          id: "1",
-          name: "毛泽东思想与中国特色社会主义思想理论体系概论",
-          video: "../../assets/img/20221.mp4",
-          content:
-            "毛泽东思想是马克思列宁主义基本原理和中国革命具体实际相结合的产物，是中国共产党人集体智慧的结晶。是由毛泽东倡导并在二十世纪中国革命中大范围实践的一种政治、军事、发展理论，一般认为其为马列主义在中国的发展。",
-        },
-        {
-          id: "4",
-          name: "零基础手绘-插画培训火星时代专业教育28年",
-          video: "",
-          content:
-            "零基础手绘 插画培训 火星时代学习全面的技能,参与综合实训项目,增强学员竞争能力,适应于19-45岁",
-        },
-        {
-          id: "2",
-          name: "剪辑怎么学习-视频剪辑教程-必学变现技巧",
-          video: "",
-          content:
-            "剪辑怎么学习,针对19-45岁人群,从入门到精通项目实战教学,贴合企业用人需求,全国22所直营分校,就近学习,高薪就业,",
-        },
-      ],
+      CourseData: [],
       //面板控制
       dialogFormVisible: false,
       //点击添加课程表单
       CourseList: {
-        course_name: "",
+        courseName: "",
         content: "",
+        video:""
       },
+      fileList: [],
       //控制视频展示
       showVideo: false,
+
+      //分页
+      pagination: {
+        currentPage: 1,
+        total: Number,
+        size: 10,
+      }
     };
   },
 };
@@ -197,6 +255,7 @@ export default {
 .el-table .warning-row {
   background: oldlace;
 }
+
 /* .video_box {
   position: absolute;
   top: 3%;
@@ -212,6 +271,7 @@ export default {
 .el-table .success-row {
   background: #f0f9eb;
 }
+
 .el-input {
   width: 680px;
 }

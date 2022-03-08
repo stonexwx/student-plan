@@ -42,6 +42,11 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
+        let password = localStorage.getItem("userdata")
+        let json =  JSON.parse(password)
+        if(value!=json.password){
+          callback(new Error("密码与当前不一致,请重新输入"))
+        }
         callback();
       }
     };
@@ -72,8 +77,8 @@ export default {
       },
       rules: {
         password: [{ validator: validateOldPass, trigger: "blur" }],
-        rePassword: [{ validator: validatePass, trigger: "blur" }],
-        newPassword: [{ validator: validatePass2, trigger: "blur" }],
+        rePassword: [{ validator: validatePass2, trigger: "blur" }],
+        newPassword: [{ validator: validatePass, trigger: "blur" }],
       },
     };
   },
@@ -91,14 +96,22 @@ export default {
       this.$refs[Passwordform].validate((valid) => {
         if (valid) {
             // 请求方法
-            userPwd(Passwordform)
+          let uid =localStorage.getItem("userdata")
+          let json =  JSON.parse(uid)
+          console.log(json)
+          let password = {
+            "uid":json.uid,
+            "password":this.Passwordform.newPassword
+          }
+            userPwd(password)
               .then((res) => {
-                if (res.success) {
+                if (res) {
+                  localStorage.setItem("userdata",JSON.stringify(res.data))
                   this.$message({
                     type: "success",
                     message: "数据保存成功！",
                   });
-                  this.resetForm(form);
+
                 } else if (res.data == null) {
                   this.$message.error("修改失败，当前密码输入错误！");
                 } else {
@@ -150,4 +163,3 @@ export default {
 }
 </style>
 
- 

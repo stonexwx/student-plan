@@ -52,7 +52,9 @@ const req = (method, url, params) => {
     }).then(res => res.data);
 };
 
+
 export {
     loginreq,
-    req
+    req,
+
 }

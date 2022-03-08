@@ -16,7 +16,7 @@
       >点击添加标签</el-button
     >
     <el-dialog title="添加标签" :visible.sync="dialogFormVisible" @close="dialogClose">
-      <tag-insert></tag-insert>
+      <tag-insert ></tag-insert>
     </el-dialog>
 
     <div class="tagPage">
@@ -65,80 +65,12 @@
 <script>
 import {ManTagAdd, TitleList, TagDel, TagDelAdmin} from "../../api/basisMG";
 import TagInsert from "./TagInsert";
+
 export default {
   data() {
     return {
       //模拟数据
-      tableData: [
-        {
-          father: {
-            fid: "1",
-            title: "文科",
-          },
-          child: [
-            {
-              sid: "1",
-              content: "语文",
-            },
-            {
-              sid: "2",
-              content: "地理",
-            },
-            {
-              sid: "3",
-              content: "历史",
-            },
-            {
-              sid: "4",
-              content: "政治",
-            },
-            {
-              sid: "21",
-              content: "新闻",
-            },
-            {
-              sid: "33",
-              content: "汉语言",
-            },
-            {
-              sid: "42",
-              content: "散文",
-            },
-          ],
-        },
-        // {
-        //   fid: "2",
-        //   title: "编程",
-        //   child: [
-        //     {
-        //       sid: "1",
-        //       content: "C",
-        //     },
-        //     {
-        //       sid: "2",
-        //       content: "Java",
-        //     },
-        //     {
-        //       sid: "21",
-        //       content: "Python",
-        //     },
-        //   ],
-        // },
-        // {
-        //   fid: "3",
-        //   title: "天杀的",
-        //   child: [
-        //     {
-        //       sid: "1",
-        //       content: "数学",
-        //     },
-        //     {
-        //       sid: "2",
-        //       content: "物理",
-        //     },
-        //   ],
-        // },
-      ],
+      tableData: [],
       //控制面板展开
       dialogFormVisible: false,
       //添加标题表单
@@ -151,15 +83,17 @@ export default {
 
   created() {
     //查询所有的标签
-    const userdata = localStorage.getItem("userdata");
-    this.getData(userdata.uid);
+    this.getData();
   },
+
   methods: {
     //保存表单
     dialogClose(){
-      this.getData()
+      this.getData();
     },
-
+    demo(data){
+      this.dialogFormVisible = data
+    },
     //标签颜色随机选择
     colorShift(min, max) {
       var num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -219,10 +153,11 @@ export default {
     //获取数据
     getData() {
       //获取所有一二级标题
+
       TitleList()
         .then((res) => {
-          if (res.success) {
-            this.tableData = res.data;
+          if (res) {
+            this.tableData = res;
             this.$message.success("标签刷新成功");
           } else {
             this.$message.error("标签刷新失败");
@@ -233,6 +168,7 @@ export default {
         });
     },
   },
+
   // 注册组件
   components: {
     TagInsert

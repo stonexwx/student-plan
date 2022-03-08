@@ -42,6 +42,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -49,6 +60,12 @@ import { TestList, TestDel, TestUpload } from "../../api/basisMG";
 export default {
   data() {
     return {
+      //分页
+      pagination: {
+        currentPage: 1,
+        total: Number,
+        size: 10,
+      },
       question: [
         {
           id: "11",
@@ -85,9 +102,25 @@ export default {
   },
   created() {},
   methods: {
+    handUploadSuccess(response, file, fileList){
+      this.CourseList.video = response[0]
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getCourseData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getCourseData()
+    },
     getTestData() {
+      let data = {
+        "sid": this.sid,
+        "page": this.pagination.currentPage,
+        "limit": this.pagination.size
+      }
       //获取题目内容
-      TestList(this.sid)
+      TestList(data)
         .then((res) => {
           if (res.success) {
             this.question = res.data;

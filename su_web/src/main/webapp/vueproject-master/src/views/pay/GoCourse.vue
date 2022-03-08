@@ -1,5 +1,5 @@
 /**
- * 自主学习 课程学习 
+ * 自主学习 课程学习
  */
 <template>
   <div>
@@ -26,35 +26,6 @@ export default {
     return {
       //标题数据
       array: [
-        {
-          fid: "1",
-          title: "文科",
-          child: [
-            {
-              sid: "1",
-              content: "语文",
-            },
-            {
-              sid: "2",
-              content: "地理",
-            },
-          ],
-        },
-
-        {
-          fid: "3",
-          title: "天杀的",
-          child: [
-            {
-              sid: "1",
-              content: "数学",
-            },
-            {
-              sid: "2",
-              content: "物理",
-            },
-          ],
-        },
       ],
     };
   },
@@ -62,8 +33,8 @@ export default {
     //获取所有一二级标题
     TitleList()
       .then((res) => {
-        if (res.success) {
-          this.array = res.data;
+        if (res) {
+          this.array = res;
           this.$message.success("标签刷新成功");
         } else {
           this.$message.error("标签分类不想让你卷!");

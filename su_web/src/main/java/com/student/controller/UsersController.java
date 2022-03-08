@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用户表(Users)表控制层
@@ -54,9 +56,9 @@ public class UsersController {
      * @param users 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Users> add(Users users) {
-        return ResponseEntity.ok(this.usersService.insert(users));
+    @PostMapping("insert")
+    public String add(Users users) {
+        return JSON.toJSONString(this.usersService.insert(users));
     }
 
     /**
@@ -67,7 +69,9 @@ public class UsersController {
      */
     @PostMapping("update")
     public String edit(Users users) {
-        return JSON.toJSONString(this.usersService.update(users));
+        Map<String,Object> map = new HashMap<>();
+        map.put("data",this.usersService.update(users));
+        return JSON.toJSONString(map);
     }
 
     /**
@@ -76,7 +80,7 @@ public class UsersController {
      * @param uid 主键
      * @return 删除是否成功
      */
-    @GetMapping("delete")
+    @PostMapping("delete")
     public String deleteById(Long uid) {
         JSONObject jsonObject =new JSONObject();
         jsonObject.put("flag",this.usersService.deleteById(uid));

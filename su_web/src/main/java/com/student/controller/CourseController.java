@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.student.biz.CourseService;
 import com.student.entity.Course;
+import com.student.entity.PageRequest;
 import com.student.util.UploadUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +40,10 @@ public class CourseController {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    @GetMapping
-//    public ResponseEntity<Page<Course>> queryByPage(Course course, PageRequest pageRequest) {
-//        return ResponseEntity.ok(this.courseService.queryByPage(course, pageRequest));
-//    }
+    @PostMapping("select_all")
+    public String queryByPage(Course course, PageRequest pageRequest) {
+        return JSON.toJSONString(this.courseService.queryByPage(course, pageRequest));
+    }
 
     /**
      * 通过主键查询单条数据
@@ -61,9 +62,9 @@ public class CourseController {
      * @param course 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Course> add(Course course) {
-        return ResponseEntity.ok(this.courseService.insert(course));
+    @PostMapping("insert")
+    public String add(Course course) {
+        return JSON.toJSONString(this.courseService.insert(course));
     }
 
     /**
@@ -83,25 +84,18 @@ public class CourseController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.courseService.deleteById(id));
+    @PostMapping("delete")
+    public String deleteById(Long id) {
+        return JSON.toJSONString(this.courseService.deleteById(id));
     }
+
     /**
      * 文件上传
      */
     @PostMapping("upload")
     public String upload(Course course,@RequestParam MultipartFile[] files, HttpServletRequest request) throws IOException{
         Map<String, List<String>> map = UploadUtil.fileUploadFileNameByDate(files,request);
-        List<String> photo = map.get("photo");
-        List<String> video = map.get("video");
-        if(video != null && video.size()>0) {
-            course.setVideo(video.get(0));
-        }
-        if(photo != null && photo.size()>0) {
-            course.setPhoto(photo.get(0));
-        }
-        return JSON.toJSONString(courseService.insert(course));
+        return JSON.toJSONString(map.get("video"));
     }
 
     /**

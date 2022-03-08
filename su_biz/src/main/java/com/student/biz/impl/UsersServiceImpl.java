@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,8 @@ public class UsersServiceImpl implements UsersService {
      */
     @Override
     public Users insert(Users users) {
+        users.setRoleId("1");
+        users.setAddtime(new Date());
         this.usersDao.insert(users);
         return users;
     }

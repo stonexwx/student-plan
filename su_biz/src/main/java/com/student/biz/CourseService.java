@@ -52,7 +52,7 @@ public interface CourseService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Long id);
+    Map<String,Object> deleteById(Long id);
 
 
 }

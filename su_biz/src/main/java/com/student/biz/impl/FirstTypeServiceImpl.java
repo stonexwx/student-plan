@@ -43,16 +43,19 @@ public class FirstTypeServiceImpl implements FirstTypeService {
      */
     @Override
     public JSONArray queryAll() {
-        JSONObject fastType = new JSONObject();
-        JSONObject fastTypeObject = new JSONObject();
+
+
         JSONArray allData = new JSONArray();
-        JSONArray secondTypeArray = new JSONArray();
+
         List<FirstType> firstTypes = firstTypeDao.queryAllNO();
         for (FirstType type : firstTypes) {
             List<SecondType> secondTypes = secondTypeDao.queryAllByFid(type.getFid());
+            JSONArray secondTypeArray = new JSONArray();
             secondTypeArray.addAll(secondTypes);
+            JSONObject fastTypeObject = new JSONObject();
             fastTypeObject.put("fid",type.getFid());
             fastTypeObject.put("title",type.getContent());
+            JSONObject fastType = new JSONObject();
             fastType.put("father",fastTypeObject);
             fastType.put("child",secondTypeArray);
             allData.add(fastType);

@@ -29,7 +29,7 @@ public interface CourseDao {
      * @param pageRequest 分页条件
      * @return 对象列表
      */
-    List<Course> queryAllByLimit(Course course, @Param("page")PageRequest pageRequest);
+    List<Course> queryAllByLimit(@Param("course") Course course, @Param("page")PageRequest pageRequest);
 
     /**
      * 统计总行数

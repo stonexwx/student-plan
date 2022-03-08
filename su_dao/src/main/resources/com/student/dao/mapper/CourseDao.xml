@@ -28,35 +28,35 @@
           id, uid, course_name, addtime, sid, state, content, photo, video
         from course
         <where>
-            <if test="id != null">
-                and id = #{id}
+            <if test="course.id != null">
+                and id = #{course.id}
             </if>
-            <if test="uid != null">
-                and uid = #{uid}
+            <if test="course.uid != null">
+                and uid = #{course.uid}
             </if>
-            <if test="courseName != null and courseName != ''">
-                and course_name = #{courseName}
+            <if test="course.courseName != null and course.courseName != ''">
+                and course_name = #{course.courseName}
             </if>
-            <if test="addtime != null">
-                and addtime = #{addtime}
+            <if test="course.addtime != null">
+                and addtime = #{course.addtime}
             </if>
-            <if test="sid != null">
-                and sid = #{sid}
+            <if test="course.sid != null">
+                and sid = #{course.sid}
             </if>
-            <if test="state != null and state != ''">
-                and state = #{state}
+            <if test="course.state != null and course.state != ''">
+                and state = #{course.state}
             </if>
-            <if test="content != null and content != ''">
-                and content = #{content}
+            <if test="course.content != null and course.content != ''">
+                and content = #{course.content}
             </if>
-            <if test="photo != null and photo != ''">
-                and photo = #{photo}
+            <if test="course.photo != null and course.photo != ''">
+                and photo = #{course.photo}
             </if>
-            <if test="video != null and video != ''">
-                and video = #{video}
+            <if test="course.video != null and course.video != ''">
+                and video = #{course.video}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{page.page}, #{page.limit}
     </select>
 
     <!--统计总行数-->

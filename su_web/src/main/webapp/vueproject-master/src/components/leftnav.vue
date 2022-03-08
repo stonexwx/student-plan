@@ -231,11 +231,9 @@ export default {
       ],
       msg: "success",
     };
-    // const userdata = localStorage.getItem("userdata");
-    const userdata = {
-      role_id:"1"
-    }
-    if (userdata.role_id == "1") {
+    const userdata = localStorage.getItem("userdata");
+    const data1 = JSON.parse(userdata)
+    if (data1.roleId === "0") {
       this.allmenu = res.Mandata;
     } else {
       this.allmenu = res.data;

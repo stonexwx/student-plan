@@ -12,10 +12,10 @@
     <el-divider></el-divider>
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item
-        :title="item.title"
-        :name="item.fid"
+        :title="item.father.title"
+        :name="item.father.fid"
         v-for="item in Title"
-        :key="item.fid"
+        :key="item.father.fid"
       >
         <el-card shadow="hover" v-for="item1 in item.child" :key="item1.sid">
           <!-- 前往题库上传 -->
@@ -34,32 +34,32 @@
 
 <script>
 // import { TitleList } from "../../api/basisMG";
+import {TitleList} from "../../api/basisMG";
+
 export default {
   name: "TitleOne",
   data() {
     return {
       activeName: "1",
       Title: [
-        {
-          fid: "1",
-          title: "文科",
-          child: [
-            {
-              sid: "1",
-              content: "语文",
-            },
-            {
-              sid: "2",
-              content: "地理",
-            },
-            {
-              sid: "3",
-              content: "地理333",
-            },
-          ],
-        },
+
       ],
     };
+  },
+  created() {
+    //获取所有一二级标题
+    TitleList()
+      .then((res) => {
+        if (res) {
+          this.Title = res;
+          this.$message.success("标签刷新成功");
+        } else {
+          this.$message.error("标签分类不想让你卷!");
+        }
+      })
+      .catch((err) => {
+        this.$message.error("请求失败，请稍后再试！");
+      });
   },
 };
 </script>

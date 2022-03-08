@@ -1,5 +1,5 @@
 /**
- * 系统管理 用户管理 
+ * 系统管理 用户管理
  */
 <template>
   <div>
@@ -66,10 +66,11 @@ export default {
   data() {
     return {
       form: {
+        uid:"",
         user_name: "",
         real_name: "",
         sex: "",
-        age: "",
+        age: Number,
       },
     };
   },
@@ -85,30 +86,31 @@ export default {
    * 创建完毕
    */
   created() {
-    this.getdata(this.form);
+    let userInformation = localStorage.getItem("userdata")
+    var json = JSON.parse(userInformation);
+    this.form.uid = json.uid
+    this.form.user_name =json.userName
+    this.form.age = Number.parseInt(json.age)
+    this.form.sex = json.sex
+    this.form.real_name = json.realName
   },
   methods: {
-    getdata(user) {
-      //获取用户信息
-      userMessage(user).then(res => {
-        //若调用失败
-        if (res.success == false) {
-          this.$message.error("请求发生错误");
-        } else {
-          this.form = res.data
-        }
-      })
-    },
     //保存表单
     onSubmit(form) {
       // 请求方法
       this.$refs[form].validate((valid) => {
         if (valid) {
-          userSave(form)
+          let data={
+            "uid":this.form.uid,
+            "userName":this.form.user_name,
+            "realName":this.form.real_name,
+            "sex":this.form.sex,
+            "age":this.form.age
+          }
+          userSave(data)
             .then((res) => {
-              if (res.success) {
+              if (res) {
                 //重新获取用户信息
-                this.getdata(this.form);
                 this.$message({
                   type: "success",
                   message: "数据保存成功！",
@@ -163,4 +165,3 @@ export default {
 }
 </style>
 
- 

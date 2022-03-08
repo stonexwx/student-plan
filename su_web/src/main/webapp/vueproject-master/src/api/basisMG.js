@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { req } from './axiosFun';
+import {req, upload} from './axiosFun';
 
 /**
  * 任务管理
@@ -23,15 +23,15 @@ export const TagsList = (params) => { return req("post", "/type/select_all", par
 export const TagAdd = (params) => { return req("post", "/type/insert", params) };
 //标签管理-删除标签
 export const TagDel = (params) => { return req("get", "/type/delete", params) };
-export const TagDelAdmin = (params) => { return req("get", "/type/delete", params) };
+export const TagDelAdmin = (params) => { return req("post", "http://localhost:8080/secondType/delete", params) };
 //标签管理-增加标签(管理员)
-export const ManTagAdd = (params) => { return req("post", "/admin_type/insert", params) };
+export const ManTagAdd = (params) => { return req("post", "http://localhost:8080/admin_type/insert", params) };
 
 /**
  *学习管理
  **/
 // 标签管理-获取所有一级二级标签
-export const TitleList = (params) => { return req("post", "/firstType/selectAll",params) };
+export const TitleList = (params) => { return req("post", "http://localhost:8080/firstType/selectAll",params) };
 // 题库管理-获取标签下题目
 export const TestList = (params) => { return req("post", "/firstType/selectAll",params) };
 // 题库管理-删除题库(管理员)
@@ -39,9 +39,10 @@ export const TestDel = (params) => { return req("post", "/firstType/selectAll",p
 // 题库管理-上传题库(管理员)
 export const TestUpload = (params) => { return req("post", "/firstType/selectAll",params) };
 // 课程管理-获取标签下所有课程
-export const CourseList = (params) => { return req("post", "/firstType/selectAll",params) };
+export const CourseList = (params) => { return req("post", "http://localhost:8080/course/select_all",params) };
 // 课程管理-删除课程(管理员)
-export const CourseDel = (params) => { return req("post", "/firstType/selectAll",params) };
+export const CourseDel = (params) => { return req("post", "http://localhost:8080/course/delete",params) };
+export const CourseInsert = (params) => { return req("post", "http://localhost:8080/course/insert",params) };
 /**
  *学习管理
  **/

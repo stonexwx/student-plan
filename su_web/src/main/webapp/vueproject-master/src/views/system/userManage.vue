@@ -49,6 +49,20 @@
       </el-table-column>
     </el-table>
 
+
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
+
+
     <el-dialog :title="this.title" :visible.sync="dialogFormVisible">
       <el-form :model="userForm" ref="userForm">
         <el-form-item
@@ -84,7 +98,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit('userForm')"
+        <el-button type="primary" @click="onSubmit('userForm');dialogFormVisible = false"
           >确 定</el-button
         >
       </div>
@@ -92,57 +106,11 @@
   </div>
 </template>
 <script>
-import { userList, userSave, userDelete } from "../../api/userMG";
+import {userList, userSave, userDelete, userInsert} from "../../api/userMG";
 export default {
   data() {
     return {
-      userDataList: [
-        {
-          uid: "1",
-          realName: "张三",
-          userName: "法外狂徒",
-          phone: "12345678",
-          password: "123456781111",
-          sex: "男",
-          age: "20",
-        },
-        {
-          uid: "2",
-          realName: "里斯",
-          userName: "法外狂徒2",
-          phone: "123456782",
-          password: "12zzz3456781111",
-          sex: "女",
-          age: "20",
-        },
-        {
-          uid: "3",
-          realName: "张三",
-          userName: "法外狂徒3",
-          phone: "12345678",
-          password: "1sfafaege",
-          sex: "男",
-          age: "20",
-        },
-        {
-          uid: "4",
-          realName: "张三",
-          userName: "法外狂徒4",
-          phone: "12345678",
-          password: "1jjjjjjjjj",
-          sex: "男",
-          age: "20",
-        },
-        {
-          uid: "5",
-          realName: "张三",
-          userName: "法外狂徒5",
-          phone: "12345678",
-          password: "1ssffghhv",
-          sex: "男",
-          age: "20",
-        },
-      ],
+      userDataList: [],
       // 添加用户表单
       userForm: {
         uid: "",
@@ -156,6 +124,13 @@ export default {
       // 控制面板展开
       dialogFormVisible: false,
       title: "",
+      //分页
+      pagination:{
+        currentPage:1,
+        total:Number,
+        size:10,
+      }
+
     };
   },
 
@@ -172,12 +147,25 @@ export default {
     this.getdata();
   },
   methods: {
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getdata()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getdata()
+    },
     getdata() {
-      获取用户信息
-        userList()
+      //获取用户信息
+        let pageRequest = {
+            "page":this.pagination.currentPage,
+            "limit":this.pagination.size
+        }
+        userList(pageRequest)
           .then((res) => {
-            if (res.success) {
+            if (res.flag) {
               this.userDataList = res.data;
+              this.pagination.total = res.count;
               this.$message.success("用户列表刷新成功");
             } else {
               this.$message.error("请求发生错误");
@@ -211,14 +199,17 @@ export default {
         this.userForm.age = "";
         this.userForm.phone = "";
         this.userForm.sex = "";
-        this.userForm.password = "";
+        this.userForm.password = null;
       }
     },
     //删除用户信息
     userDelete(uid) {
-         userDelete(uid)
+      let data={
+        "uid":uid
+      }
+         userDelete(data)
           .then((res) => {
-            if (res.success) {
+            if (res.flag) {
               //刷新用户数据
               this.getdata();
               this.$message({
@@ -241,10 +232,10 @@ export default {
       // 请求方法
       this.$refs[userForm].validate((valid) => {
         if (valid) {
-          userSave(userForm)
-            .then((res) => {
-              if (res.success) {
-                this.getdata(this.userForm);
+          if(this.userForm.uid==""){
+            userInsert(this.userForm).then((res)=>{
+              if(res){
+                this.getdata()
                 this.$message({
                   type: "success",
                   message: "数据保存成功！",
@@ -256,9 +247,30 @@ export default {
                 });
               }
             })
-            .catch((err) => {
-              this.$message.error("保存失败，请稍后再试！");
-            });
+              .catch((err) => {
+                this.$message.error("保存失败，请稍后再试！");
+              })
+          }else {
+            userSave(this.userForm)
+              .then((res) => {
+                if (res) {
+                  this.getdata();
+                  this.$message({
+                    type: "success",
+                    message: "数据保存成功！",
+                  });
+                } else {
+                  this.$message({
+                    type: "info",
+                    message: res.msg,
+                  });
+                }
+              })
+              .catch((err) => {
+                this.$message.error("保存失败，请稍后再试！");
+              });
+          }
+
         } else {
           this.$message.error("发生错误啦");
         }
