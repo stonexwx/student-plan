@@ -33,11 +33,11 @@ export const ManTagAdd = (params) => { return req("post", "http://localhost:8080
 // 标签管理-获取所有一级二级标签
 export const TitleList = (params) => { return req("post", "http://localhost:8080/firstType/selectAll",params) };
 // 题库管理-获取标签下题目
-export const TestList = (params) => { return req("post", "/firstType/selectAll",params) };
+export const TestList = (params) => { return req("post", "http://localhost:8080/practice/select_all",params) };
 // 题库管理-删除题库(管理员)
-export const TestDel = (params) => { return req("post", "/firstType/selectAll",params) };
+export const TestDel = (params) => { return req("post", "http://localhost:8080/practice/delete",params) };
 // 题库管理-上传题库(管理员)
-export const TestUpload = (params) => { return req("post", "/firstType/selectAll",params) };
+export const TestUpload = (params) => { return req("post", "http://localhost:8080/practice/insert",params) };
 // 课程管理-获取标签下所有课程
 export const CourseList = (params) => { return req("post", "http://localhost:8080/course/select_all",params) };
 // 课程管理-删除课程(管理员)

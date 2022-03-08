@@ -2,6 +2,7 @@ package com.student.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.student.biz.PracticeService;
+import com.student.entity.PageRequest;
 import com.student.entity.Practice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +31,10 @@ public class PracticeController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-//    @GetMapping
-//    public ResponseEntity<Page<Practice>> queryByPage(Practice practice, PageRequest pageRequest) {
-//        return ResponseEntity.ok(this.practiceService.queryByPage(practice, pageRequest));
-//    }
+    @PostMapping("select_all")
+    public String queryByPage(Practice practice, PageRequest pageRequest) {
+        return JSON.toJSONString(this.practiceService.queryByPage(practice, pageRequest));
+    }
 
     /**
      * 通过主键查询单条数据
@@ -74,9 +75,9 @@ public class PracticeController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return ResponseEntity.ok(this.practiceService.deleteById(id));
+    @PostMapping("delete")
+    public String deleteById(Long id) {
+        return JSON.toJSONString(this.practiceService.deleteById(id));
     }
 
 }

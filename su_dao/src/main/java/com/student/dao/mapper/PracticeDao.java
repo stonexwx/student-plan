@@ -1,5 +1,6 @@
 package com.student.dao.mapper;
 
+import com.student.entity.PageRequest;
 import com.student.entity.Practice;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,10 +26,10 @@ public interface PracticeDao {
      * 查询指定行数据
      *
      * @param practice 查询条件
-     * @param pageable         分页对象
+     * @param pageRequest
      * @return 对象列表
      */
-//    List<Practice> queryAllByLimit(Practice practice, @Param("pageable") Pageable pageable);
+    List<Practice> queryAllByLimit(@Param("pra") Practice practice, @Param("pageable")PageRequest pageRequest);
 
     /**
      * 统计总行数

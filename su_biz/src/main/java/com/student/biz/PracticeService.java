@@ -1,6 +1,9 @@
 package com.student.biz;
 
+import com.student.entity.PageRequest;
 import com.student.entity.Practice;
+
+import java.util.Map;
 
 /**
  * 练习资料表(Practice)表服务接口
@@ -25,7 +28,7 @@ public interface PracticeService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    Page<Practice> queryByPage(Practice practice, PageRequest pageRequest);
+    Map<String,Object> queryByPage(Practice practice, PageRequest pageRequest);
 
     /**
      * 新增数据

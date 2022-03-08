@@ -67,30 +67,6 @@ export default {
         size: 10,
       },
       question: [
-        {
-          id: "11",
-          text: "",
-          content:
-            "企业发放的奖金根据利润提成。利润(I)低于或等于10万元时,奖金可提10%;利润高于10万元,低于20万元时,低于10万元的部分按10%提成,高于10万元的部分,可可提成7.5%;20万到40万之间时,高于20万元的部分,可提成5%;40万到60万之间时高于40万元的部分,可提成3%;60万到100万之间时,高于60万元的部分,可提成1.5%,高于100万元时,超过100万元的部分按1%提成,从键盘输入当月利润I,求应发放奖金总数?",
-        },
-        {
-          id: "112",
-          text: "",
-          content:
-            "有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？",
-        },
-        {
-          id: "113",
-          text: "",
-          content:
-            "古典问题：有一对兔子，从出生后第3个月起每个月都生一对兔子，小兔子长到第三个月后每个月又生一对兔子，假如兔子都不死，问每个月的兔子总数为多少？",
-        },
-        {
-          id: "114",
-          text: "",
-          content:
-            "有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？",
-        },
       ],
       //控制面板
       dialogFormVisible: false,
@@ -100,7 +76,9 @@ export default {
       sid: this.$route.query.sid,
     };
   },
-  created() {},
+  created() {
+    this.getTestData()
+  },
   methods: {
     handUploadSuccess(response, file, fileList){
       this.CourseList.video = response[0]
@@ -122,8 +100,9 @@ export default {
       //获取题目内容
       TestList(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             this.question = res.data;
+            this.pagination.total = res.count
             this.$message.success("题目刷新成功");
           } else {
             this.$message.error("题目刷新失败");
@@ -134,9 +113,13 @@ export default {
         });
     },
     deleteQuestion(id) {
-      TestDel(id)
+      let data={
+        "id":id
+      }
+      TestDel(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
+            this.getTestData();
             this.$message.success("删除ok");
           } else {
             this.$message.error("删除失败");
@@ -148,14 +131,16 @@ export default {
     },
     onSubmit() {
       //提交文本域
+      const userdata = localStorage.getItem("userdata");
+      let id = JSON.parse(userdata);
         const testArr = {
-            sid:this.sid,
-            content:this.textarea
+            "sid":this.sid,
+            "content":this.textarea,
+            "uid":id.uid
         }
-      console.log(testArr);
       TestUpload(testArr)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             this.$message.success("添加成功");
             this.getTestData()
             this.dialogFormVisible = false;

@@ -23,20 +23,20 @@
           id, uid, content, sid
         from practice
         <where>
-            <if test="id != null">
-                and id = #{id}
+            <if test="pra.id != null">
+                and id = #{pra.id}
             </if>
-            <if test="uid != null">
-                and uid = #{uid}
+            <if test="pra.uid != null">
+                and uid = #{pra.uid}
             </if>
-            <if test="content != null and content != ''">
-                and content = #{content}
+            <if test="pra.content != null and pra.content != ''">
+                and content = #{pra.content}
             </if>
-            <if test="sid != null">
-                and sid = #{sid}
+            <if test="pra.sid != null">
+                and sid = #{pra.sid}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{pageable.page}, #{pageable.limit}
     </select>
 
     <!--统计总行数-->

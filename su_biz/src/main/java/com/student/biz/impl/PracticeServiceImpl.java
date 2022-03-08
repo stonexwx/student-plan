@@ -2,10 +2,13 @@ package com.student.biz.impl;
 
 import com.student.biz.PracticeService;
 import com.student.dao.mapper.PracticeDao;
+import com.student.entity.PageRequest;
 import com.student.entity.Practice;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 练习资料表(Practice)表服务实现类
@@ -36,11 +39,15 @@ public class PracticeServiceImpl implements PracticeService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    @Override
-//    public Page<Practice> queryByPage(Practice practice, PageRequest pageRequest) {
-//        long total = this.practiceDao.count(practice);
-//        return new PageImpl<>(this.practiceDao.queryAllByLimit(practice, pageRequest), pageRequest, total);
-//    }
+    @Override
+    public Map<String, Object> queryByPage(Practice practice, PageRequest pageRequest) {
+        long total = this.practiceDao.count(practice);
+        Map<String,Object> map = new HashMap<>();
+        map.put("count",total);
+        map.put("data",this.practiceDao.queryAllByLimit(practice, pageRequest));
+
+        return map;
+    }
 
     /**
      * 新增数据
