@@ -1,15 +1,15 @@
 /**
- * 学习辅助 学习资料 这个页面和笔记页面的富文本的方法都没写 就是传值给你的方法
- */
+* 学习辅助 学习笔记
+*/
 <template>
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>学习资料</el-breadcrumb-item>
+      <el-breadcrumb-item>学习笔记</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <h4 style="color: #5aacff; text-align: center">请在页面最底部添加资料</h4>
+    <h4 style="color: #5aacff; text-align: center">请在页面最底部添加笔记</h4>
 
     <el-divider></el-divider>
 
@@ -19,22 +19,20 @@
           <el-form label-position="center" class="demo-table-expand">
             <el-form-item label="所属标签">
               <el-tag type="success"
-                ><span>{{ props.row.name }}</span></el-tag
+              ><span>{{ props.row.typeMapper.name }}</span></el-tag
               >
             </el-form-item>
-            <el-form-item label="资料详情">
-              <span style="color: #5aacff; font-weight: bold">{{
-                props.row.content
-              }}</span>
+            <el-form-item label="笔记详情">
+              <span style="color: #5aacff; font-weight: bold" v-html="props.row.information.content"></span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="所属标签" prop="name" width="200">
+      <el-table-column label="所属标签" prop="typeMapper.name" width="200">
       </el-table-column>
       <el-table-column
-        label="资料详情"
-        prop="content"
+        label="笔记详情"
+        prop="information.content"
         :show-overflow-tooltip="true"
         width="800"
       ></el-table-column>
@@ -43,147 +41,140 @@
           <el-button
             type="danger"
             size="mini"
-            @click="DeleteNote(scope.row.iid)"
-            >点击删除</el-button
+            @click="DeleteNote(scope.row.information.iid)"
+          >点击删除</el-button
           >
         </el-button-group>
       </el-table-column>
     </el-table>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
     <el-divider></el-divider>
+
 
     <!-- 以下为富文本部分 -->
     <!-- 目前富文本版本为V4 交给你了 -->
     <!-- demo1为富文本容器 -->
-    <div id="demo1"></div>
-     
-          <!--选择界面 -->
-    <div class="Notefooter">
-      <el-select v-model="value" placeholder="请选择标签">
-        <el-option
-          v-for="item in options"
-          :key="item.id"
-          :label="item.name"
-          :value="item.name"
-        >
-        </el-option>
-      </el-select>
-      <el-button type="primary" @click="submit()">点击提交资料</el-button>
-    </div>
+    <home-help :options="options" :getNoteData="getNoteData" :TagsList="Tags" :pagination="pagination"></home-help>
+
+
+
   </div>
 </template>
 
 <script>
 import { NoteAndHelpList, TagsList, NoteAndHelpDel } from "../../api/basisMG";
-import wangEditor from "wangeditor";
+import home from "./Home";
+import HomeHelp from "./HomeHelp";
 export default {
+  components: {HomeHelp},
   data() {
     return {
-      //editor
-      editor: null,
-      editorData: "",
-      dialogFormVisible: false,
-      //资料模拟数据
+      //笔记模拟数据
       NoteData: [
-        {
-          name: "语文",
-          content: "111112222222。",
-        },
-        {
-          name: "数学",
-          content: "11111111111111111111",
-        },
-        {
-          name: "英语",
-          content: "222222222222222222",
-        },
+
       ],
-      // 标签数据
       options: [
-        {
-          id: "1",
-          name: "数学",
-        },
-        {
-          id: "2",
-          name: "语文",
-        },
-        {
-          id: "3",
-          name: "英语",
-        },
       ],
-      value: "",
       activeName: "1",
+      //分页
+      pagination: {
+        currentPage: 1,
+        total: Number,
+        size: 10,
+      },
     };
   },
   created() {
-    // type为后台判定页面的标志 资料为1
-    const type = "1";
+    // type为后台判定页面的标志 笔记为0
     const userdata = localStorage.getItem("userdata");
-    // 获取所有资料
-    this.getHelpData(type, userdata.uid);
-    //获取所有标签
-    TagsList(userdata.uid)
-      .then((res) => {
-        if (res.success) {
-          //查询标签数据
-          this.options = res.data;
-          this.$message.success("标签列表刷新成功");
-        } else {
-          this.$message.error("标签列表刷新发生错误");
-        }
-      })
-      .catch((err) => {
-        this.$message.error("请求失败，请稍后再试！");
-      });
-  },
-  mounted() {
-    //配置editor
-    const editor = new wangEditor("#demo1");
-    // 配置 onchange 回调函数，将数据同步到 vue 中
-    editor.config.onchange = (newHtml) => {
-      this.editorData = newHtml;
-    };
-    // 创建编辑器
-    editor.create();
-    this.editor = editor;
+    let data1={
+      "typeId":"1",
+      "uid":JSON.parse(userdata).uid,
+      "page":this.pagination.currentPage,
+      "limit":this.pagination.size
+    }
+    this.getNoteData(data1);
+
   },
   methods: {
-    //获取所有资料
-    getHelpData(type, uid) {
-      NoteAndHelpList(type,uid)
+    Tags(){
+      const userdata = localStorage.getItem("userdata");
+      let data={
+        "uid":JSON.parse(userdata).uid
+      }
+      //获取所有标签
+      TagsList(data)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
+            //查询标签数据
+            this.options = res.data;
+            this.$message.success("标签列表刷新成功");
+          } else {
+            this.$message.error("标签列表刷新发生错误");
+          }
+        })
+        .catch((err) => {
+          this.$message.error("请求失败，请稍后再试！");
+        });
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getCourseData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getCourseData()
+    },
+    //获取所有笔记
+    getNoteData(data) {
+      NoteAndHelpList(data)
+        .then((res) => {
+          if (res) {
             this.NoteData = res.data;
-            this.$message.success("资料刷新成功");
+            this.pagination.total=res.count
+            this.$message.success("笔记刷新成功");
           } else {
-            this.$message.error("资料不想让你卷!");
+            this.$message.error("笔记不想让你卷!");
           }
         })
         .catch((err) => {
           this.$message.error("请求失败，请稍后再试！");
         });
     },
-    //删除资料
+    //删除笔记
     DeleteNote(iid) {
-      alert(iid + "资料已删除！");
-      const type = "1";
-      NoteAndHelpDel(iid, type)
+      let data={
+        "iid":iid
+      }
+      NoteAndHelpDel(data)
         .then((res) => {
-          if (res.success) {
-            this.$message.success("资料删除成功");
+          if (res.flag) {
+            const userdata = localStorage.getItem("userdata");
+            let data1={
+              "typeId":"1",
+              "uid":JSON.parse(userdata).uid,
+              "page":this.pagination.currentPage,
+              "limit":this.pagination.size
+            }
+            this.getNoteData(data1)
+            this.$message.success("笔记删除成功");
           } else {
-            this.$message.error("资料不想让你删掉他!");
+            this.$message.error("笔记不想让你删掉他!");
           }
         })
         .catch((err) => {
           this.$message.error("请求失败，请稍后再试！");
         });
-    },
-    beforeDestroy() {
-      // 调用销毁 API 对当前编辑器实例进行销毁
-      this.editor.destroy();
-      this.editor = null;
     },
   },
 };
@@ -249,7 +240,6 @@ a {
 }
 </style>
 
- 
- 
 
- 
+
+

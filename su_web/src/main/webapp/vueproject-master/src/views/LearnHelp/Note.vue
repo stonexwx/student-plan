@@ -64,7 +64,7 @@
     <!-- 以下为富文本部分 -->
     <!-- 目前富文本版本为V4 交给你了 -->
     <!-- demo1为富文本容器 -->
-    <home :options="options" :getNoteData="getNoteData" :TagsList="Tags"></home>
+    <home :options="options" :getNoteData="getNoteData" :TagsList="Tags" :pagination="pagination"></home>
 
 
 
@@ -97,7 +97,7 @@ export default {
     // type为后台判定页面的标志 笔记为0
     const userdata = localStorage.getItem("userdata");
     let data1={
-      "type":"0",
+      "typeId":"0",
       "uid":JSON.parse(userdata).uid,
       "page":this.pagination.currentPage,
       "limit":this.pagination.size
@@ -152,11 +152,20 @@ export default {
     },
     //删除笔记
     DeleteNote(iid) {
-      alert(iid+"笔记已删除！")
-      const type = "0";
-      NoteAndHelpDel(iid, type)
+      let data={
+        "iid":iid
+      }
+      NoteAndHelpDel(data)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
+            const userdata = localStorage.getItem("userdata");
+            let data1={
+              "typeId":"0",
+              "uid":JSON.parse(userdata).uid,
+              "page":this.pagination.currentPage,
+              "limit":this.pagination.size
+            }
+            this.getNoteData(data1)
             this.$message.success("笔记删除成功");
           } else {
             this.$message.error("笔记不想让你删掉他!");

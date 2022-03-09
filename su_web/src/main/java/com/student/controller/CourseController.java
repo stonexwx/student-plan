@@ -98,22 +98,6 @@ public class CourseController {
         return JSON.toJSONString(map.get("video"));
     }
 
-    /**
-     * 创建照片回调函数
-     * @param map
-     * @return
-     */
-    private JSONObject getJsonObject(Map<String, List<String>> map) {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        jsonObject.put("errno",0);
-        jsonObject2.put("url", map.get("photo"));
-        jsonObject2.put("alt","????");
-        jsonObject2.put("href","");
-        jsonArray.add(jsonObject2);
-        jsonObject.put("data",jsonArray);
-        return jsonObject;
-    }
+
 }
 

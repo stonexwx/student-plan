@@ -49,7 +49,7 @@ export const CourseInsert = (params) => { return req("post", "http://localhost:8
 // 学习辅助-获取所有笔记资料
  export const NoteAndHelpList = (params) => { return req("post", "http://localhost:8080/information/select_all",params) };
 // 学习辅助-删除笔记资料
-export const NoteAndHelpDel = (params) => { return req("post", "/firstType/selectAll",params) };
+export const NoteAndHelpDel = (params) => { return req("post", "http://localhost:8080/information/delete",params) };
 export const NoteAndHelpInsert = (params) => { return req("post", "http://localhost:8080/information/insert",params) };
 //数据可视化
 export const Statistics = (params) => { return req("post", "http://localhost:8080/task/select_id",params) };

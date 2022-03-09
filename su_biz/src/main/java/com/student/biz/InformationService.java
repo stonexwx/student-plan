@@ -34,9 +34,10 @@ public interface InformationService {
      * 新增数据
      *
      * @param information 实例对象
+     * @param id
      * @return 实例对象
      */
-    Information insert(Information information);
+    Information insert(Information information,long id);
 
     /**
      * 修改数据
@@ -52,6 +53,6 @@ public interface InformationService {
      * @param iid 主键
      * @return 是否成功
      */
-    boolean deleteById(Long iid);
+    Map<String,Object> deleteById(Long iid);
 
 }

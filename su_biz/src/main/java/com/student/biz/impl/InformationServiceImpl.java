@@ -2,8 +2,10 @@ package com.student.biz.impl;
 
 import com.student.biz.InformationService;
 import com.student.dao.mapper.InformationDao;
+import com.student.dao.mapper.TypeMapperDao;
 import com.student.entity.Information;
 import com.student.entity.PageRequest;
+import com.student.entity.TypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ public class InformationServiceImpl implements InformationService {
     private InformationDao informationDao;
     @Autowired
     HashMap<String,Object> map;
+    @Resource
+    private TypeMapperDao typeMapperDao;
     /**
      * 通过ID查询单条数据
      *
@@ -54,12 +58,17 @@ public class InformationServiceImpl implements InformationService {
      * 新增数据
      *
      * @param information 实例对象
+     * @param id
      * @return 实例对象
      */
     @Override
-    public Information insert(Information information) {
+    public Information insert(Information information, long id) {
         information.setAddtime(new Date());
         this.informationDao.insert(information);
+        TypeMapper typeMapper =new TypeMapper();
+        typeMapper.setTypeId(id);
+        typeMapper.setIid(information.getIid());
+        typeMapperDao.insert(typeMapper);
         return information;
     }
 
@@ -82,7 +91,8 @@ public class InformationServiceImpl implements InformationService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long iid) {
-        return this.informationDao.deleteById(iid) > 0;
+    public Map<String, Object> deleteById(Long iid) {
+        map.put("flag",this.informationDao.deleteById(iid) > 0);
+        return map;
     }
 }
