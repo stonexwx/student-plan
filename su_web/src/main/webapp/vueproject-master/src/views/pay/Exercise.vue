@@ -73,14 +73,17 @@ export default {
             "有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？",
         },
       ],
-      
+
     };
   },
   created() {
     //获取题目内容
-    TestList(this.sid)
+    let data = {
+      "sid":this.sid
+    }
+    TestList(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             this.question = res.data;
             this.$message.success("题目刷新成功");
           } else {

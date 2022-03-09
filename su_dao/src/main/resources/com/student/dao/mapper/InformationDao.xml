@@ -20,39 +20,61 @@
         from information
         where iid = #{iid}
     </select>
-
+    <resultMap id="informationDTOMap" type="com.student.dto.InformationDTO">
+        <result property="information.iid" column="iid" jdbcType="INTEGER"/>
+        <result property="information.uid" column="uid" jdbcType="INTEGER"/>
+        <result property="information.content" column="content" jdbcType="VARCHAR"/>
+        <result property="information.addtime" column="addtime" jdbcType="TIMESTAMP"/>
+        <result property="information.photo" column="photo" jdbcType="VARCHAR"/>
+        <result property="information.vidio" column="vidio" jdbcType="VARCHAR"/>
+        <result property="information.typeId" column="type_id" jdbcType="VARCHAR"/>
+        <result property="information.state" column="state" jdbcType="VARCHAR"/>
+        <result property="typeMapper.id" column="id"/>
+        <result property="typeMapper.name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="InformationMap">
-        select
-          iid, uid, content, addtime, photo, vidio, type_id, state
-        from information
+    <select id="queryAllByLimit" resultMap="informationDTOMap">
+        SELECT
+        type.id,
+        type.`name`,
+        information.*
+        FROM
+        type_mapper
+        INNER JOIN
+        information
+        ON
+        type_mapper.iid = information.iid
+        INNER JOIN
+        type
+        ON
+        type_mapper.type_id = type.id
         <where>
-            <if test="iid != null">
-                and iid = #{iid}
+            <if test="info.iid != null">
+                and information.iid = #{info.iid}
             </if>
-            <if test="uid != null">
-                and uid = #{uid}
+            <if test="info.uid != null">
+                and information.uid = #{info.uid}
             </if>
-            <if test="content != null and content != ''">
-                and content = #{content}
+            <if test="info.content != null and info.content != ''">
+                and information.content = #{info.content}
             </if>
-            <if test="addtime != null">
-                and addtime = #{addtime}
+            <if test="info.addtime != null">
+                and information.addtime = #{info.addtime}
             </if>
-            <if test="photo != null and photo != ''">
-                and photo = #{photo}
+            <if test="info.photo != null and info.photo != ''">
+                and information.photo = #{info.photo}
             </if>
-            <if test="vidio != null and vidio != ''">
-                and vidio = #{vidio}
+            <if test="info.vidio != null and info.vidio != ''">
+                and information.vidio = #{info.vidio}
             </if>
-            <if test="typeId != null and typeId != ''">
-                and type_id = #{typeId}
+            <if test="info.typeId != null and info.typeId != ''">
+                and information.type_id = #{info.typeId}
             </if>
-            <if test="state != null and state != ''">
-                and state = #{state}
+            <if test="info.state != null and info.state != ''">
+                and information.state = #{info.state}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        limit #{page.page}, #{page.limit}
     </select>
 
     <!--统计总行数-->
@@ -90,7 +112,7 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="iid" useGeneratedKeys="true">
         insert into information(uid, content, addtime, photo, vidio, type_id, state)
-        values (#{uid}, #{content}, #{addtime}, #{photo}, #{vidio}, #{typeId}, #{state})
+        values (#{uid}, #{content}, #{addtime}, #{photo}, #{vidio}, #{typeId}, '1')
     </insert>
 
     <insert id="insertBatch" keyProperty="iid" useGeneratedKeys="true">

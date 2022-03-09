@@ -75,7 +75,7 @@ public class TypeController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @GetMapping("delete")
+    @PostMapping("delete")
     public String deleteById(Long id) {
         return JSON.toJSONString(this.typeService.deleteById(id));
     }

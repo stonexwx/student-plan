@@ -103,7 +103,7 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="tid" useGeneratedKeys="true">
         insert into task(uid, content, start_time, end_time, state)
-        values (#{task.uid}, #{task.content}, #{task.startTime}, #{task.endTime}, '1')
+        values (#{task.uid}, #{task.content}, #{task.startTime}, #{task.endTime}, '0')
     </insert>
 
     <insert id="insertBatch" keyProperty="tid" useGeneratedKeys="true">

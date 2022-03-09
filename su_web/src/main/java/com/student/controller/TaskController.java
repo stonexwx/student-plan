@@ -75,7 +75,7 @@ public class TaskController {
      * @param tid 主键
      * @return 删除是否成功
      */
-    @GetMapping("delete")
+    @PostMapping ("delete")
     public String deleteById(Long tid) {
         return JSON.toJSONString(this.taskService.deleteById(tid));
     }

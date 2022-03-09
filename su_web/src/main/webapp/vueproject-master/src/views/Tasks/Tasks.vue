@@ -8,17 +8,21 @@
 
     <!-- 按钮组 -->
     <div class="clickButton">
-      <el-button type="primary" round @click="dialogVisible = true"
-        >点我添加待办事项哦</el-button
+      <el-button type="primary" round @click="getTagsData"
+      >点我添加待办事项哦
+      </el-button
       >
       <el-button type="warning" round @click="OkAndNoTask()"
-        >所有任务</el-button
+      >所有任务
+      </el-button
       >
       <el-button type="success" round @click="OkAndNoTask(1)"
-        >查看已完成任务</el-button
+      >查看已完成任务
+      </el-button
       >
       <el-button type="info" round @click="OkAndNoTask(0)"
-        >查看未完成任务</el-button
+      >查看未完成任务
+      </el-button
       >
     </div>
     <!-- 添加代办 -->
@@ -45,15 +49,15 @@
           <el-input type="textarea" v-model="todoList.content"></el-input>
         </el-form-item>
         <el-select
-          v-model="todoList.name"
+          v-model="todoList.id"
           placeholder="请选择标签"
           style="width: 420px"
         >
           <el-option
             v-for="item in options"
-            :key="item.options"
+            :key="item.id"
             :label="item.name"
-            :value="item.name"
+            :value="item.id"
             style="width: 420px"
           >
           </el-option>
@@ -78,6 +82,7 @@
         sortable
         width="170"
         column-key="startTime"
+        :formatter="formatter"
       >
       </el-table-column>
       <el-table-column prop="task.content" label="内容" width="250">
@@ -102,7 +107,8 @@
           <el-tag
             :type="scope.row.type.name === '收藏夹' ? 'primary' : 'success'"
             disable-transitions
-            >{{ scope.row.type.name }}</el-tag
+          >{{ scope.row.type.name }}
+          </el-tag
           >
         </template>
       </el-table-column>
@@ -128,15 +134,17 @@
             prop="task.state"
             type="success"
             size="mini"
-            v-if="!scope.row.task.state"
+            v-if="scope.row.task.state==0"
             @click="Accomplish(scope.row.task.tid)"
-            >点击完成</el-button
+          >点击完成
+          </el-button
           >
           <el-button
             type="danger"
             size="mini"
             @click="Delete(scope.row.task.tid)"
-            >点击删除</el-button
+          >点击删除
+          </el-button
           >
         </el-button-group>
       </el-table-column>
@@ -155,6 +163,7 @@
         sortable
         width="170"
         column-key="startTime"
+        :formatter="formatter"
       >
       </el-table-column>
       <el-table-column prop="task.content" label="内容" width="250">
@@ -179,7 +188,8 @@
           <el-tag
             :type="scope.row.type.name === '收藏夹' ? 'primary' : 'success'"
             disable-transitions
-            >{{ scope.row.type.name }}</el-tag
+          >{{ scope.row.type.name }}
+          </el-tag
           >
         </template>
       </el-table-column>
@@ -207,13 +217,15 @@
             size="mini"
             v-if="!scope.row.task.state"
             @click="Accomplish(scope.row.task.tid)"
-            >点击完成</el-button
+          >点击完成
+          </el-button
           >
           <el-button
             type="danger"
             size="mini"
             @click="Delete(scope.row.task.tid)"
-            >点击删除</el-button
+          >点击删除
+          </el-button
           >
         </el-button-group>
       </el-table-column>
@@ -232,6 +244,7 @@
         sortable
         width="170"
         column-key="startTime"
+        :formatter="formatter"
       >
       </el-table-column>
       <el-table-column prop="task.content" label="内容" width="250">
@@ -256,7 +269,8 @@
           <el-tag
             :type="scope.row.type.name === '收藏夹' ? 'primary' : 'success'"
             disable-transitions
-            >{{ scope.row.type.name }}</el-tag
+          >{{ scope.row.type.name }}
+          </el-tag
           >
         </template>
       </el-table-column>
@@ -284,60 +298,48 @@
             size="mini"
             v-if="!scope.row.task.state"
             @click="Accomplish(scope.row.task.tid)"
-            >点击完成</el-button
+          >点击完成
+          </el-button
           >
           <el-button
             type="danger"
             size="mini"
             @click="Delete(scope.row.task.tid)"
-            >点击删除</el-button
+          >点击删除
+          </el-button
           >
         </el-button-group>
       </el-table-column>
     </el-table>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 50, 100, 200]"
+        :page-size="pagination.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  todoList,
-  todoListAdd,
-  todoListDelete,
-  todoListSave,
-  TagsList,
-} from "../../api/basisMG";
+import {TagsList, todoList, todoListAdd, todoListDelete, todoListSave,} from "../../api/basisMG";
+import moment from 'moment'
+
 export default {
   data() {
     return {
+      //分页
+      pagination: {
+        currentPage: 1,
+        total: Number,
+        size: 10,
+      },
       //模拟数据
-      todoListShow: [
-        {
-          task: {
-            tid: "1",
-            startTime: "2016-05-02",
-            content: "今天的目标是赚他一个亿",
-            endTime: "2022-05-02",
-            state: 1,
-          },
-          type: {
-            id: "21",
-            name: "语文",
-          },
-        },
-        {
-          task: {
-            tid: "2",
-            startTime: "2016-05-02",
-            content: "今天的目标是赚他一个亿",
-            endTime: "2022-02-02",
-            state: 0,
-          },
-          type: {
-            id: "23",
-            name: "c",
-          },
-        },
-      ],
+      todoListShow: [],
       //是否展开面板
       dialogVisible: false,
       //用户增加待办的表单
@@ -345,25 +347,19 @@ export default {
         content: "",
         startTime: "",
         endTime: "",
-        name: "",
+        id: "",
       },
       //时间选择器取值中间量
       Time: "",
       options: [
-        {
-          id: "1",
-          name: "数学",
-        },
-        {
-          id: "2",
-          name: "语文",
-        },
-        {
-          id: "3",
-          name: "英语",
-        },
+
       ],
-      option: [],
+      option: [
+        {
+          text:"",
+          value:""
+        }
+      ],
       one: [],
       //控制所有任务表格显示
       showTable: true,
@@ -376,28 +372,57 @@ export default {
   created() {
     //获取任务数据
     this.getListData();
-    //获取标签数据
-    this.getTagsData();
+   //获取标签数据
+    // this.getTagsData();
   },
   computed: {
     //区分完成及未完成任务筛选器 不要动这个
     OkTaskfilter() {
-      return this.todoListShow.filter((item) => item.task.state === 1);
+      return this.todoListShow.filter((item) => item.task.state == 1);
     },
     NoTaskfilter() {
-      return this.todoListShow.filter((item) => item.task.state === 0);
+      return this.todoListShow.filter((item) => item.task.state == 0);
     },
   },
   methods: {
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getCourseData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getCourseData()
+    },
     //获取页面数据
     getListData() {
       //获取登陆中存储的用户信息userdata中的uid
       const userdata = localStorage.getItem("userdata");
-      todoList(userdata.uid)
+      let json = JSON.parse(userdata);
+      let data = {
+        "uid": json.uid,
+        "page": this.pagination.currentPage,
+        "limit": this.pagination.size
+      }
+      todoList(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             //查询页面数据
             this.todoListShow = res.data;
+            this.pagination.total = res.count;
+            let set = new Set()
+            for(let i =0;i<res.data.length;i++) {
+              set.add(JSON.stringify(res.data[i].type))
+            }
+            let a = Array.from(set)
+            let c=[]
+            let cc=[]
+            for(let i =0;i<a.length;i++){
+              cc[i]=a[i].replaceAll("id","value")
+
+              cc[i]=cc[i].replaceAll("name","text")
+               c[i]= JSON.parse(cc[i])
+            }
+            this.option=c
             this.$message.success("任务列表刷新成功");
           } else {
             this.$message.error("列表刷新发生错误");
@@ -409,25 +434,25 @@ export default {
     },
     //获取标签数据
     getTagsData() {
+      this.dialogVisible = true;
       //获取登陆中存储的用户信息userdata中的uid
       const userdata = localStorage.getItem("userdata");
-      TagsList(userdata.uid)
+      let uid = JSON.parse(userdata)
+      let data= {
+        "uid":uid.uid
+      }
+      TagsList(data)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
             //查询标签数据
             this.options = res.data;
-            //这里是你写的标签筛选 不起作用 我之前也是这么写的
-            for (var i = 0; i < res.data.length; i++) {
-              this.option[i].text = res.data[i].name;
-              this.option[i].value = res.data[i].name;
-            }
             this.$message.success("标签列表刷新成功");
           } else {
             this.$message.error("标签列表刷新发生错误");
           }
         })
         .catch((err) => {
-          this.$message.error("请求失败，请稍后再试！");
+          this.$message.error("标签请求失败，请稍后再试！");
         });
     },
     //显示状态 控制样式
@@ -473,9 +498,13 @@ export default {
     //点击完成
     Accomplish(tid) {
       // this.$message.success("恭喜您完成了这个任务");
-      todoListSave(tid)
+      let data ={
+        "tid":tid,
+        "state":"1"
+      }
+      todoListSave(data)
         .then((res) => {
-          if (res.success) {
+          if (res) {
             //重新查询页面数据
             this.$message.success("恭喜您完成了这个任务");
             //重新查询页面任务
@@ -490,10 +519,13 @@ export default {
     },
     //点击删除
     Delete(tid) {
-      this.$message.success("删除成功");
-      todoListDelete(tid)
+      let data ={
+        "tid":tid
+      }
+
+      todoListDelete(data)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
             //重新查询页面数据
             this.$message.success("删除成功");
             this.getListData();
@@ -519,9 +551,18 @@ export default {
       } else {
         console.log(this.todoList);
         this.dialogVisible = false;
-        todoListAdd(todoList)
+        const userdata = localStorage.getItem("userdata");
+        let uid = JSON.parse(userdata)
+        let data = {
+          "content":this.todoList.content,
+          "startTime":this.todoList.startTime,
+          "endTime":this.todoList.endTime,
+          "uid":uid.uid,
+          "id":this.todoList.id
+        }
+        todoListAdd(data)
           .then((res) => {
-            if (res.success) {
+            if (res) {
               //查询页面数据
               this.getListData();
               this.$message.success("任务列表刷新成功");
@@ -571,11 +612,16 @@ export default {
       }
       return lastTime;
     },
-    formatter(row, column) {
-      return row.task.endTime;
+    formatter(row, column,value) {
+      var date = value;
+
+      if(date == undefined){return ''};
+      return moment(date).format("YYYY-MM-DD")
+
     },
     filterTag(value, row) {
-      return row.name === value;
+      console.log(row)
+      return row.type.id === value;
     },
     //关闭添加待办框
     handleClose(done) {
@@ -583,7 +629,8 @@ export default {
         .then((_) => {
           done();
         })
-        .catch((_) => {});
+        .catch((_) => {
+        });
     },
   },
 };
@@ -593,6 +640,7 @@ export default {
 .el-input {
   width: 300px;
 }
+
 .icon {
   display: flex;
   align-items: center;
@@ -600,10 +648,12 @@ export default {
   font-size: 20px;
   height: 100%;
 }
+
 .clickButton {
   display: flex;
   width: 100%;
   justify-content: flex-start;
   margin: 30px 0px;
 }
+
 </style>

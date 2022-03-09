@@ -9,7 +9,7 @@
       <el-breadcrumb-item>我的标签</el-breadcrumb-item>
     </el-breadcrumb>
     <el-button type="primary" @click="open" style="margin:30px 0 0px 0px">点击添加标签</el-button>
-    
+
     <div class="tagPage">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="标签id号" width="280">
@@ -27,13 +27,25 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
+              prop="id"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row.id)"
               >删除</el-button
             >
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pagination.currentPage"
+          :page-sizes="[10, 50, 100, 200]"
+          :page-size="pagination.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pagination.total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -44,36 +56,13 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          id: "1",
-          name: "语文",
-        },
-        {
-          id: "1",
-          name: "乱七八糟的标签",
-        },
-        {
-          id: "1",
-          name: "哈哈哈哈哈",
-        },
-        {
-          id: "1",
-          name: "哦哟哦哟哟",
-        },
-        {
-          id: "1",
-          name: "语文",
-        },
-        {
-          id: "1",
-          name: "c",
-        },
+
       ],
-      // 分页参数
-      pageparm: {
+      //分页
+      pagination: {
         currentPage: 1,
-        pageSize: 10,
-        total: 10,
+        total: Number,
+        size: 10,
       },
     };
   },
@@ -81,14 +70,29 @@ export default {
   created() {
     //查询所有的标签
     const userdata = localStorage.getItem("userdata");
-    this.getData(userdata.uid);
+    let uid = JSON.parse(userdata)
+    let data= {
+      "uid":uid.uid
+    }
+    this.getData(data);
   },
   methods: {
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getCourseData()
+    },
+    handleCurrentChange(val) {
+      this.pagination.currentPage = val
+      this.getCourseData()
+    },
     //标签删除
-    handleDelete(row) {
-      TagDel(row.id)
+    handleDelete(value) {
+      let data={
+        "id":value
+      }
+      TagDel(data)
         .then((res) => {
-          if (res.data.flag) {
+          if (res.flag) {
             //重新查询所有标签
             this.getData(this.uid);
             this.$message.success("您的标签已删除，剩余标签刷新成功！");
@@ -102,10 +106,12 @@ export default {
     },
     //查询所有标签信息
     getData(uid) {
+
       TagsList(uid)
         .then((res) => {
-          if (res.success) {
+          if (res.flag) {
             this.tableData = res.data;
+            this.pagination.total = res.count
             this.$message.success("标签刷新成功");
           } else {
             this.$message.error("标签请求失败");
@@ -118,6 +124,7 @@ export default {
     //添加标签
     open() {
       const userdata = localStorage.getItem("userdata");
+      let uid = JSON.parse(userdata).uid
       this.$prompt("请输入标签名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -127,13 +134,21 @@ export default {
             this.$message.error("怎么给爷上个空的!");
             return;
           } else {
-            TagAdd(value, userdata.uid)
+            let data = {
+              "name":value,
+              "uid":uid
+            }
+            TagAdd(data)
               .then((res) => {
-                if (res.success) {
+                if (res) {
                   const userdata = localStorage.getItem("userdata");
                   this.tableData = res.data;
                   //重新查询所有标签
-                  this.getData(userdata.uid);
+                  let uid = JSON.parse(userdata)
+                  let data= {
+                    "uid":uid.uid
+                  }
+                  this.getData(data);
                   this.$message.success("标签刷新成功");
 
                   this.$message({

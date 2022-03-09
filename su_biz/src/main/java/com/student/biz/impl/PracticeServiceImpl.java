@@ -42,10 +42,13 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public Map<String, Object> queryByPage(Practice practice, PageRequest pageRequest) {
         long total = this.practiceDao.count(practice);
+        if(String.valueOf(pageRequest.getPage())!=null ||String.valueOf(pageRequest.getPage())!="" ){
+            pageRequest.setPage(1);
+            pageRequest.setLimit((int) total);
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("count",total);
         map.put("data",this.practiceDao.queryAllByLimit(practice, pageRequest));
-
         return map;
     }
 

@@ -1,6 +1,6 @@
 /**
 * 图表界面
-*/ 
+*/
 <template>
   <!-- 组件主盒子 -->
   <div class="stbox">
@@ -60,8 +60,8 @@ export default {
               show: false,
             },
             data: [
-              { value: 1048, name: "已完成任务" },
-              { value: 735, name: "未完成任务" },
+              { value: 1, name: "已完成任务" },
+              { value: 1, name: "未完成任务" },
             ],
           },
         ],
@@ -72,11 +72,28 @@ export default {
   created() {
     //获取数据
     const userdata = localStorage.getItem("userdata");
-    Statistics(userdata.uid)
+    let uid = JSON.parse(userdata).uid
+    let data={
+      "uid":uid
+    }
+    Statistics(data)
       .then((res) => {
-        if (res.success) {
-          this.option.series.data = res.data
+        if (res) {
+          let a = res.data
+          let b=0;
+          let c=0;
+          for(var i=0;i<a.length;i++){
+            if(a[i].task.state == 0){
+              b++
+            }else {
+              c++
+            }
+          }
+          console.log(this.option.series[0].data[0])
+          this.option.series[0].data[0].value=c
+          this.option.series[0].data[1].value=b
           this.$message.success("数据可视化刷新成功");
+          this.drawLine()
         } else {
           this.$message.error("数据可视化刷新失败!");
         }
@@ -86,9 +103,9 @@ export default {
       });
   },
   // 挂载结束状态(里面是操作)
-  mounted() {
-    this.drawLine();
-  },
+  // mounted() {
+  //   this.drawLine();
+  // },
   // 里面的函数只有调用才会执行
   methods: {
     drawLine() {

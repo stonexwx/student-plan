@@ -1,10 +1,8 @@
 package com.student.biz;
 
-import com.student.dto.TaskDTO;
 import com.student.entity.PageRequest;
 import com.student.entity.Task;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +33,7 @@ public interface TaskService {
      *标签任务综合查询
      * @return
      */
-    List<TaskDTO> queryByTid(Task task, PageRequest pageRequest);
+    Map<String,Object> queryByTid(Task task, PageRequest pageRequest);
     /**
      * 新增数据
      *

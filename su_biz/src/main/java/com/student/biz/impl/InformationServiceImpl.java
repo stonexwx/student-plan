@@ -3,9 +3,14 @@ package com.student.biz.impl;
 import com.student.biz.InformationService;
 import com.student.dao.mapper.InformationDao;
 import com.student.entity.Information;
+import com.student.entity.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 信息表(Information)表服务实现类
@@ -17,7 +22,8 @@ import javax.annotation.Resource;
 public class InformationServiceImpl implements InformationService {
     @Resource
     private InformationDao informationDao;
-
+    @Autowired
+    HashMap<String,Object> map;
     /**
      * 通过ID查询单条数据
      *
@@ -36,11 +42,13 @@ public class InformationServiceImpl implements InformationService {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-//    @Override
-//    public Page<Information> queryByPage(Information information, PageRequest pageRequest) {
-//        long total = this.informationDao.count(information);
-//        return new PageImpl<>(this.informationDao.queryAllByLimit(information, , pageRequest), pageRequest, total);
-//    }
+    @Override
+    public Map<String, Object> queryByPage(Information information, PageRequest pageRequest) {
+        long total = this.informationDao.count(information);
+        map.put("count",total);
+        map.put("data",this.informationDao.queryAllByLimit(information, pageRequest));
+        return map;
+    }
 
     /**
      * 新增数据
@@ -50,6 +58,7 @@ public class InformationServiceImpl implements InformationService {
      */
     @Override
     public Information insert(Information information) {
+        information.setAddtime(new Date());
         this.informationDao.insert(information);
         return information;
     }

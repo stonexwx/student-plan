@@ -5,24 +5,24 @@ import {req, upload} from './axiosFun';
  * 任务管理
  **/
 // 任务管理-获取任务列表
-export const todoList = (params) => { return req("post", "/api/Goods/list", params) };
+export const todoList = (params) => { return req("post", "http://localhost:8080/task/select_id", params) };
 // 任务管理-增加任务
-export const todoListAdd = (params) => { return req("post", "/api/Goods/save", params) };
+export const todoListAdd = (params) => { return req("post", "http://localhost:8080/task/insert", params) };
 // 任务管理-点击删除任务
-export const todoListDelete = (params) => { return axios.delete("/api/Goods/delete?ids=" + params + "&token=" + localStorage.getItem('logintoken')).then(res => res.data) };
+export const todoListDelete = (params) => { return req("post","http://localhost:8080/task/delete",params ) };
 // 任务管理-点击完成任务
-export const todoListSave = (params) => { return req("post", "/api/Goods/save", params) };
+export const todoListSave = (params) => { return req("post", "http://localhost:8080/task/update", params) };
 
 
 /**
  * 标签管理
  **/
 // 标签管理-获取所有标签
-export const TagsList = (params) => { return req("post", "/type/select_all", params) };
+export const TagsList = (params) => { return req("post", "http://localhost:8080/type/select_all", params) };
 //标签管理-增加标签
-export const TagAdd = (params) => { return req("post", "/type/insert", params) };
+export const TagAdd = (params) => { return req("post", "http://localhost:8080/type/insert", params) };
 //标签管理-删除标签
-export const TagDel = (params) => { return req("get", "/type/delete", params) };
+export const TagDel = (params) => { return req("post", "http://localhost:8080/type/delete", params) };
 export const TagDelAdmin = (params) => { return req("post", "http://localhost:8080/secondType/delete", params) };
 //标签管理-增加标签(管理员)
 export const ManTagAdd = (params) => { return req("post", "http://localhost:8080/admin_type/insert", params) };
@@ -47,9 +47,9 @@ export const CourseInsert = (params) => { return req("post", "http://localhost:8
  *学习管理
  **/
 // 学习辅助-获取所有笔记资料
- export const NoteAndHelpList = (params) => { return req("post", "/firstType/selectAll",params) };
+ export const NoteAndHelpList = (params) => { return req("post", "http://localhost:8080/information/select_all",params) };
 // 学习辅助-删除笔记资料
 export const NoteAndHelpDel = (params) => { return req("post", "/firstType/selectAll",params) };
-
+export const NoteAndHelpInsert = (params) => { return req("post", "http://localhost:8080/information/insert",params) };
 //数据可视化
-export const Statistics = (params) => { return req("post", "/firstType/selectAll",params) };
+export const Statistics = (params) => { return req("post", "http://localhost:8080/task/select_id",params) };

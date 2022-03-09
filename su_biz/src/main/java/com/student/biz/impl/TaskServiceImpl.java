@@ -3,7 +3,6 @@ package com.student.biz.impl;
 import com.student.biz.TaskService;
 import com.student.dao.mapper.TaskDao;
 import com.student.dao.mapper.TypeMapperDao;
-import com.student.dto.TaskDTO;
 import com.student.entity.PageRequest;
 import com.student.entity.Task;
 import com.student.entity.TypeMapper;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +47,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String,Object> queryByPage(Task task, PageRequest pageRequest) {
         long total = this.taskDao.count(task);
+        if(String.valueOf(pageRequest.getPage())!=null || String.valueOf(pageRequest.getPage())!=""){
+            pageRequest.setPage(1);
+            pageRequest.setLimit((int) total);
+        }
         map.put("task",this.taskDao.queryAllByLimit(task, pageRequest));
         map.put("total",total);
         return map;
@@ -61,8 +63,15 @@ public class TaskServiceImpl implements TaskService {
      * @return
      */
     @Override
-    public List<TaskDTO> queryByTid(Task task, PageRequest pageRequest) {
-        return taskDao.queryAllById(task,pageRequest);
+    public Map<String, Object> queryByTid(Task task, PageRequest pageRequest) {
+        long total = taskDao.count(task);
+        if(String.valueOf(pageRequest.getPage())!=null || String.valueOf(pageRequest.getPage())!=""){
+            pageRequest.setPage(1);
+            pageRequest.setLimit((int) total);
+        }
+        map.put("count",total);
+        map.put("data",taskDao.queryAllById(task,pageRequest));
+        return map;
     }
 
     /**
@@ -74,12 +83,12 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Task insert(Task task, Long id) {
-        long tid =this.taskDao.insert(task);
+        this.taskDao.insert(task);
         TypeMapper typeMapper =new TypeMapper();
         typeMapper.setTypeId(id);
         typeMapper.setTid(task.getTid());
         typeMapperDao.insert(typeMapper);
-        return this.taskDao.queryById(tid);
+        return this.taskDao.queryById(task.getTid());
     }
 
     /**
@@ -90,7 +99,6 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Task update(Task task) {
-        task.setState("0");
         this.taskDao.update(task);
         return this.queryById(task.getTid());
     }

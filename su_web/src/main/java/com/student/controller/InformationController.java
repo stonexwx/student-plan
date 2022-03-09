@@ -1,7 +1,9 @@
 package com.student.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.student.biz.InformationService;
 import com.student.entity.Information;
+import com.student.entity.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +31,10 @@ public class InformationController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-//    @GetMapping
-//    public ResponseEntity<Page<Information>> queryByPage(Information information, PageRequest pageRequest) {
-//        return ResponseEntity.ok(this.informationService.queryByPage(information, pageRequest));
-//    }
+    @PostMapping("select_all")
+    public String queryByPage(Information information, PageRequest pageRequest) {
+        return JSON.toJSONString(this.informationService.queryByPage(information, pageRequest));
+    }
 
     /**
      * 通过主键查询单条数据
@@ -51,9 +53,9 @@ public class InformationController {
      * @param information 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Information> add(Information information) {
-        return ResponseEntity.ok(this.informationService.insert(information));
+    @PostMapping("insert")
+    public String add(Information information) {
+        return JSON.toJSONString(this.informationService.insert(information));
     }
 
     /**

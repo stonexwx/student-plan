@@ -1,6 +1,9 @@
 package com.student.biz;
 
 import com.student.entity.Information;
+import com.student.entity.PageRequest;
+
+import java.util.Map;
 
 /**
  * 信息表(Information)表服务接口
@@ -25,7 +28,7 @@ public interface InformationService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    Page<Information> queryByPage(Information information, PageRequest pageRequest);
+    Map<String,Object> queryByPage(Information information, PageRequest pageRequest);
 
     /**
      * 新增数据

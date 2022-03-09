@@ -46,6 +46,10 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public Map<String,Object> queryByPage(Type type, PageRequest pageRequest) {
         long total = this.typeDao.count(type);
+        if(String.valueOf(pageRequest.getPage())!=null || String.valueOf(pageRequest.getPage())!=""){
+            pageRequest.setPage(1);
+            pageRequest.setLimit((int) total);
+        }
         List<Type> list = this.typeDao.queryAllByLimit(type,pageRequest);
         map.put("flag",list.size()>0);
         map.put("data",list);
