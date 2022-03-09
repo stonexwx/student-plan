@@ -1,14 +1,12 @@
 /**
 * 头部菜单
-*/ 
+*/
 <template>
   <el-menu class="el-menu-demo" mode="horizontal" background-color="#fff" text-color="#378beb" active-text-color="#fff">
 
     <el-submenu index="2" class="submenu">
       <!-- <template slot="title">{{user.userRealName}}</template> -->
-      <template slot="title">超级管理员</template>
-      <el-menu-item index="2-1">设置</el-menu-item>
-      <el-menu-item @click="content()" index="2-2">个人中心</el-menu-item>
+      <template slot="title">{{userName}}</template>
       <el-menu-item @click="exit()" index="2-3">退出</el-menu-item>
     </el-submenu>
   </el-menu>
@@ -20,12 +18,13 @@ export default {
   data() {
     return {
       collapsed: true,
-      user: {}
+      user: {},
+      userName:""
     }
   },
   // 创建完毕状态(里面是操作)
   created() {
-    this.user = JSON.parse(localStorage.getItem('userdata'))
+    this.userName = JSON.parse(localStorage.getItem('userdata')).userName
   },
   methods: {
     // 退出登录
@@ -39,6 +38,7 @@ export default {
           setTimeout(() => {
             this.$store.commit('logout', 'false')
             this.$router.push({ path: '/login' })
+            localStorage.clear()
             this.$message({
               type: 'success',
               message: '已退出登录!'

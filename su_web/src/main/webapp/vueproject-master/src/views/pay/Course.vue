@@ -92,10 +92,21 @@
       </div>
     </el-dialog>
 
-    <!-- 视频播放 -->
-    <div v-show="showVideo">
-      <video :src="videoUrl" ref="video" controls="controls" autoplay></video>
-    </div>
+    <el-dialog
+      title="视频"
+      :visible.sync="dialogVisible"
+      width="60%">
+
+           <div v-show="showVideo" >
+            <video :src="videoUrl" ref="video" controls="controls" style="height: 100%;width: 100%"></video>
+           </div>
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -104,7 +115,7 @@ import {CourseDel, CourseInsert, CourseList} from "../../api/basisMG.js";
 
 export default {
   methods: {
-    handUploadSuccess(response, file, fileList){
+    handUploadSuccess(response, file, fileList) {
       this.CourseList.video = response[0]
     },
     handleSizeChange(val) {
@@ -141,8 +152,8 @@ export default {
     //删除课程
     deleteCourse(id) {
       // alert(id);
-      let data={
-        "id":id
+      let data = {
+        "id": id
       }
       CourseDel(data)
         .then((res) => {
@@ -165,34 +176,33 @@ export default {
       const userdata = localStorage.getItem("userdata");
       let id = JSON.parse(userdata);
       let data = {
-        "uid":id.uid,
-        "sid":this.sid,
-        "courseName":this.CourseList.courseName,
-        "content":this.CourseList.content,
-        "video":"http://"+this.CourseList.video
+        "uid": id.uid,
+        "sid": this.sid,
+        "courseName": this.CourseList.courseName,
+        "content": this.CourseList.content,
+        "video": "http://" + this.CourseList.video
       }
 
       CourseInsert(data)
         .then((res) => {
-        if(res){
+          if (res) {
 
-          this.$message.success("上传成功")
-          this.getCourseData()
-        }else {
-          this.$message.error("上传失败")
-        }
-      })
-      .catch((err)=>{
-        this.$message.error("(未请求)");
-        }
-      )
+            this.$message.success("上传成功")
+            this.getCourseData()
+          } else {
+            this.$message.error("上传失败")
+          }
+        })
+        .catch((err) => {
+            this.$message.error("(未请求)");
+          }
+        )
     },
     //点击上课
     goVideo(video) {
       this.showVideo = true;
       this.videoUrl = video;
-      console.log(this.videoUrl);
-      console.log(video);
+      this.dialogVisible = true
       this.$refs.video.src = video;
       // this.$refs.videoPlayer.src = this.videoUrl;
       // this.$nextTick(() => {
@@ -201,13 +211,13 @@ export default {
     },
 
     handleRemove(file, fileList) {
-      file.response[0]=null
-      this.CourseList.video=""
+      file.response[0] = null
+      this.CourseList.video = ""
     },
     handlePreview(file) {
       console.log(file);
     },
-    handleExceed(){
+    handleExceed() {
       this.$message.error("一次只能上传一个视频哦")
     }
   },
@@ -230,11 +240,12 @@ export default {
       CourseData: [],
       //面板控制
       dialogFormVisible: false,
+      dialogVisible: false,
       //点击添加课程表单
       CourseList: {
         courseName: "",
         content: "",
-        video:""
+        video: ""
       },
       fileList: [],
       //控制视频展示
