@@ -12,7 +12,7 @@
       <el-form-item prop="username">
         <el-input
           type="text"
-          v-model="ruleForm.username"
+          v-model="ruleForm.phone"
           auto-complete="off"
           placeholder="账号"
         ></el-input>
@@ -49,12 +49,12 @@ export default {
       logining: false,
       ruleForm: {
         //username和password默认为空
-        username: "",
+        phone: "",
         password: "",
       },
       //rules前端验证
       rules: {
-        username: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        phone: [{ required: true, message: "请输入账号", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
@@ -95,6 +95,7 @@ export default {
               } else {
                 delCookie('user')
                 delCookie('pwd')
+
               }
               //如果请求成功就让他2秒跳转路由
               setTimeout(() => {
@@ -113,8 +114,10 @@ export default {
           }
               }, 1000)
             } else {
-              this.$message.error(res.msg)
-              return false
+              this.$message.error("用户密码错误")
+              this.ruleForm.phone=""
+              this.ruleForm.password=""
+              this.logining=false
             }
           })
         } else {

@@ -39,11 +39,13 @@ public class UploadUtil {
                 File localFile = new File(path);
                 try {
                     file.transferTo(localFile);
+                    //判断类型图片
                     if(Arrays.binarySearch(MimeTypeUtils.IMAGE_EXTENSION,fileNameSuffix)>0){
                         photo.add(request.getScheme() + "://" + request.getServerName()
                                 + ":" + request.getServerPort() + "/upload/" + finalFileName);
                         filesName.put("photo",photo);
                     }
+                    //判断类型视频
                     if(Arrays.binarySearch(MimeTypeUtils.VIDEO_EXTENSION,fileNameSuffix)>0){
                         video.add(request.getServerName()
                                 + ":" + request.getServerPort() + "/upload/" + finalFileName);
