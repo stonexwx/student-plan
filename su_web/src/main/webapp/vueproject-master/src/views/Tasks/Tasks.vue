@@ -8,7 +8,7 @@
 
     <!-- 按钮组 -->
     <div class="clickButton">
-      <el-button type="primary" round @click="getTagsData"
+      <el-button type="primary" round @click="getTagsData(null,'0')"
       >点我添加待办事项哦
       </el-button
       >
@@ -27,7 +27,7 @@
     </div>
     <!-- 添加代办 -->
     <el-dialog
-      title="添加待办"
+      :title="dialogTitle"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose"
@@ -137,6 +137,13 @@
             v-if="scope.row.task.state==0"
             @click="Accomplish(scope.row.task.tid)"
           >点击完成
+          </el-button
+          >
+          <el-button
+            type="warning"
+            size="mini"
+            @click="getTagsData(scope.row,'1')"
+          >点击修改
           </el-button
           >
           <el-button
@@ -332,6 +339,8 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      //标题
+      dialogTitle:"添加待办",
       //分页
       pagination: {
         currentPage: 1,
@@ -433,8 +442,22 @@ export default {
         });
     },
     //获取标签数据
-    getTagsData() {
+    getTagsData(row,type) {
       this.dialogVisible = true;
+      if(type == "1"){
+        this.dialogTitle = "修改代办"
+            this.todoList.content = row.task.content;
+        this.todoList.startTime = row.task.startTime;
+        this.todoList.endTime = row.task.endTime;
+        this.todoList.id = row.type.name;
+      } else if(type == "0"){
+        console.log("sss")
+        this.dialogTitle = "添加待办"
+        this.todoList.content = "";
+        this.todoList.startTime = "";
+        this.todoList.endTime = "";
+        this.todoList.id = "";
+      }
       //获取登陆中存储的用户信息userdata中的uid
       const userdata = localStorage.getItem("userdata");
       let uid = JSON.parse(userdata)
@@ -522,7 +545,6 @@ export default {
       let data ={
         "tid":tid
       }
-
       todoListDelete(data)
         .then((res) => {
           if (res.flag) {
@@ -537,6 +559,7 @@ export default {
           this.$message.error("请求失败，请稍后再试！");
         });
     },
+
     //增加任务
     ListAdd() {
       //判断表单是否填写完成

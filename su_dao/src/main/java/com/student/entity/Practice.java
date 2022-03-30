@@ -27,6 +27,15 @@ public class Practice implements Serializable {
      */
     private Long sid;
 
+    private String answer;
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
 
     public Long getId() {
         return id;

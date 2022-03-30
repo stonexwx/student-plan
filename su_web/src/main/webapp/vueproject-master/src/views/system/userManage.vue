@@ -1,49 +1,55 @@
 /**
- * 系统管理 用户管理(管理员)
- */
+* 系统管理 用户管理(管理员)
+*/
 <template>
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/system/userManage' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户信息管理(管理员)</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-button
+      style="margin-top: 30px"
       type="primary"
       @click="userModifition(row)"
-      style="margin-top: 30px"
-      >添加用户</el-button
+    >添加用户
+    </el-button
     >
     <el-divider></el-divider>
-    <el-table :data="userDataList" border style="width: 100%; margin-top: 40px">
-      <el-table-column prop="uid" label="用户id" width="80px">
+    <el-table :data="userDataList" border style="width: 100%; margin-top: 40px" >
+      <el-table-column label="用户id" prop="uid" width="80px">
       </el-table-column>
-      <el-table-column prop="realName" label="用户姓名" width="150px">
+      <el-table-column label="用户姓名" prop="realName" width="150px">
       </el-table-column>
-      <el-table-column prop="userName" label="用户昵称" width="180px">
+      <el-table-column label="用户昵称" prop="userName" width="180px">
       </el-table-column>
-      <el-table-column prop="age" label="用户年龄" width="100px">
+      <el-table-column label="用户角色" prop="roleId" width="100px" :formatter="roleShif">
       </el-table-column>
-      <el-table-column prop="sex" label="用户性别" width="100px">
+      <el-table-column label="用户年龄" prop="age" width="100px">
       </el-table-column>
-      <el-table-column prop="phone" label="用户电话" width="180px">
+      <el-table-column label="用户性别" prop="sex" width="100px">
       </el-table-column>
-      <el-table-column prop="password" label="用户密码" width="150px">
+      <el-table-column label="用户电话" prop="phone" width="180px">
+      </el-table-column>
+      <el-table-column label="用户密码" prop="password" width="150px">
       </el-table-column>
       <el-table-column label="操作"
-        ><el-button-group slot-scope="scope">
+      >
+        <el-button-group slot-scope="scope">
           <el-button
-            type="warning"
             size="mini"
+            type="warning"
             @click="userModifition(scope.row)"
-            >点击修改</el-button
+          >点击修改
+          </el-button
           >
           <el-button
-            type="danger"
             size="mini"
+            type="danger"
             @click="userDelete(scope.row.uid)"
-            >点击删除</el-button
+          >点击删除
+          </el-button
           >
         </el-button-group>
       </el-table-column>
@@ -52,43 +58,59 @@
 
     <div class="block">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[10, 50, 100, 200]"
         :page-size="pagination.size"
+        :page-sizes="[5, 50, 100, 200]"
+        :total="pagination.total"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
       </el-pagination>
     </div>
 
 
     <el-dialog :title="this.title" :visible.sync="dialogFormVisible">
-      <el-form :model="userForm" ref="userForm">
+      <el-form ref="userForm" :model="userForm" :rules="rules">
         <el-form-item
-          prop="userName"
           label="用户昵称"
-          :rules="[{ required: true, message: '昵称不能为空' }]"
+          prop="userName"
         >
           <el-input v-model="userForm.userName"></el-input>
         </el-form-item>
         <el-form-item label="用户姓名" prop="realName">
           <el-input v-model="userForm.realName"></el-input>
         </el-form-item>
+        <el-form-item label="用户角色" prop="roleId">
+          <el-select v-model="userForm.roleId" placeholder="请选择角色">
+            <el-option
+              label="管理员"
+              value="0">
+            </el-option>
+            <el-option
+              label="用户"
+              value="1"
+             >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item
           label="用户年龄"
           prop="age"
-          :rules="[{ required: true, message: '年龄不能为空' }]"
         >
           <el-input v-model="userForm.age"></el-input>
         </el-form-item>
         <el-form-item label="用户性别" prop="sex">
-          <el-input v-model="userForm.sex"></el-input>
+          <el-radio-group v-model="userForm.sex"
+                          :rules="[{ required: true, message: '性别不能为空' }]">
+            <el-radio label="男">男</el-radio>
+            <el-radio label="女">女</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item
-          label="用户电话"
+          label="用户账号"
           prop="phone"
-          :rules="[{ required: true, message: '电话不能为空' }]"
+
         >
           <el-input v-model="userForm.phone"></el-input>
         </el-form-item>
@@ -97,16 +119,28 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit('userForm');dialogFormVisible = false"
-          >确 定</el-button
+        <el-button @click="resetForm('userForm')">取 消</el-button>
+        <el-button type="primary" @click="onSubmit('userForm');"
+        >确 定
+        </el-button
         >
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import {isvalidPhone} from '../../../config/validate'
 import {userList, userSave, userDelete, userInsert} from "../../api/userMG";
+
+var validPhone = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('请输入电话号码'))
+  } else if (!isvalidPhone(value)) {
+    callback(new Error('请输入正确的11位手机号码'))
+  } else {
+    callback()
+  }
+}
 export default {
   data() {
     return {
@@ -119,18 +153,38 @@ export default {
         phone: "",
         password: "",
         sex: "",
+        roleId:"",
         age: "",
       },
       // 控制面板展开
       dialogFormVisible: false,
       title: "",
       //分页
-      pagination:{
-        currentPage:1,
-        total:Number,
-        size:10,
+      pagination: {
+        currentPage: 1,
+        total: Number,
+        size: 10,
+      },
+      rules: {
+        userName: [{required: true, message: '昵称不能为空', trigger: 'blur'}, {
+          min: 2,
+          max: 7,
+          message: '长度在 2 到 7 个字符',
+          trigger: 'blur'
+        }],
+        realName: [{required: true, message: '姓名不能为空', trigger: 'blur'},
+          {
+            min: 2,
+            max:7,
+            message: '长度在2 到 7个字符',
+            trigger: 'blur'
+          }],
+        age: [{ required: true, message: '年龄不能为空且只能为数字', trigger: 'blur'}],
+        sex: [{required: true, message: '性别不能为空', trigger: 'change'}],
+        roleId: [{required: true, message: '角色不能为空', trigger: 'blur'}],
+        phone: [{required: true, trigger: 'blur', validator: validPhone}],
+        password: [{required: true, message: '密码不能为空', trigger: 'blur'}],
       }
-
     };
   },
 
@@ -147,6 +201,10 @@ export default {
     this.getdata();
   },
   methods: {
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.dialogFormVisible = false;
+    },
     handleSizeChange(val) {
       this.pagination.size = val
       this.getdata()
@@ -157,23 +215,23 @@ export default {
     },
     getdata() {
       //获取用户信息
-        let pageRequest = {
-            "page":this.pagination.currentPage,
-            "limit":this.pagination.size
-        }
-        userList(pageRequest)
-          .then((res) => {
-            if (res.flag) {
-              this.userDataList = res.data;
-              this.pagination.total = res.count;
-              this.$message.success("用户列表刷新成功");
-            } else {
-              this.$message.error("请求发生错误");
-            }
-          })
-          .catch((err) => {
-            this.$message.error("请求失败，请稍后再试！");
-          });
+      let pageRequest = {
+        "page": this.pagination.currentPage,
+        "limit": this.pagination.size
+      }
+      userList(pageRequest)
+        .then((res) => {
+          if (res.flag) {
+            this.userDataList = res.data;
+            this.pagination.total = res.count;
+            this.$message.success("用户列表刷新成功");
+          } else {
+            this.$message.error("请求发生错误");
+          }
+        })
+        .catch((err) => {
+          this.$message.error("请求失败，请稍后再试！");
+        });
     },
     //修改、添加用户信息
     userModifition(row) {
@@ -185,6 +243,7 @@ export default {
         this.userForm.userName = row.userName;
         this.userForm.realName = row.realName;
         this.userForm.age = row.age;
+        this.userForm.roleId = row.roleId;
         this.userForm.phone = row.phone;
         this.userForm.sex = row.sex;
         this.userForm.password = row.password;
@@ -197,49 +256,54 @@ export default {
         this.userForm.userName = "";
         this.userForm.realName = "";
         this.userForm.age = "";
+        this.userForm.roleId = "";
         this.userForm.phone = "";
         this.userForm.sex = "";
         this.userForm.password = null;
       }
     },
+    roleShif(row){
+      return row.roleId == "1"?"用户":"管理员";
+    },
     //删除用户信息
     userDelete(uid) {
-      let data={
-        "uid":uid
+      let data = {
+        "uid": uid
       }
-         userDelete(data)
-          .then((res) => {
-            if (res.flag) {
-              //刷新用户数据
-              this.getdata();
-              this.$message({
-                type: "success",
-                message: "数据删除成功！",
-              });
-            } else {
-              this.$message({
-                type: "info",
-                message: res.msg,
-              });
-            }
-          })
-          .catch((err) => {
-            this.$message.error("删除失败，请稍后再试！");
-          });
+      userDelete(data)
+        .then((res) => {
+          if (res.flag) {
+            //刷新用户数据
+            this.getdata();
+            this.$message({
+              type: "success",
+              message: "数据删除成功！",
+            });
+          } else {
+            this.$message({
+              type: "info",
+              message: res.msg,
+            });
+          }
+        })
+        .catch((err) => {
+          this.$message.error("删除失败，请稍后再试！");
+        });
     },
     //保存表单
     onSubmit(userForm) {
       // 请求方法
       this.$refs[userForm].validate((valid) => {
         if (valid) {
-          if(this.userForm.uid==""){
-            userInsert(this.userForm).then((res)=>{
-              if(res){
+          if (this.userForm.uid == "") {
+            userInsert(this.userForm).then((res) => {
+              if (res) {
                 this.getdata()
                 this.$message({
                   type: "success",
                   message: "数据保存成功！",
                 });
+                this.dialogFormVisible = false;
               } else {
                 this.$message({
                   type: "info",
@@ -250,7 +314,7 @@ export default {
               .catch((err) => {
                 this.$message.error("保存失败，请稍后再试！");
               })
-          }else {
+          } else {
             userSave(this.userForm)
               .then((res) => {
                 if (res) {
@@ -259,6 +323,7 @@ export default {
                     type: "success",
                     message: "数据保存成功！",
                   });
+                  this.dialogFormVisible = false;
                 } else {
                   this.$message({
                     type: "info",
@@ -270,7 +335,6 @@ export default {
                 this.$message.error("保存失败，请稍后再试！");
               });
           }
-
         } else {
           this.$message.error("发生错误啦");
         }

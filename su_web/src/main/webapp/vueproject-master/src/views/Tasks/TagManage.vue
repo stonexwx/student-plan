@@ -6,7 +6,7 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/system/userManage' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>我的标签</el-breadcrumb-item>
     </el-breadcrumb>
     <el-button
@@ -16,7 +16,7 @@
       >点击添加标签</el-button
     >
     <el-dialog title="添加标签" :visible.sync="dialogFormVisible" @close="dialogClose">
-      <tag-insert ></tag-insert>
+      <tag-insert  v-on:getDialogFormVisible="close"></tag-insert>
     </el-dialog>
 
     <div class="tagPage">
@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="danger" @click="handleDelete(scope.row.fid)"
+            <el-button type="danger" @click="handleDelete(scope.row.father.fid)"
               >删除</el-button
             >
           </template>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import {ManTagAdd, TitleList, TagDel, TagDelAdmin} from "../../api/basisMG";
+import {ManTagAdd, TitleList, TagDel, TagDelAdmin, TagFirstDel} from "../../api/basisMG";
 import TagInsert from "./TagInsert";
 
 export default {
@@ -87,6 +87,12 @@ export default {
   },
 
   methods: {
+
+    //关闭组件
+    close(data){
+      console.log(data)
+      this.dialogFormVisible = data
+    },
     //保存表单
     dialogClose(){
       this.getData();
@@ -119,6 +125,8 @@ export default {
     },
     //一级标签删除
     handleDelete(fid) {
+      console.log(fid);
+      let data = {"fid":fid}
       this.$confirm(
         "此操作将删除一级标签包括其下的二级标签, 是否继续?",
         "提示",
@@ -129,9 +137,9 @@ export default {
         }
       )
         .then(() => {
-          TagDel(fid)
+          TagFirstDel(data)
             .then((res) => {
-              if (res.data.flag) {
+              if (res.flag) {
                 //重新查询所有标签
                 this.getData();
                 this.$message.success("您的标签已删除，剩余标签刷新成功！");

@@ -5,7 +5,7 @@
   <div>
       <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>首页</el-breadcrumb-item>
       <el-breadcrumb-item>题库</el-breadcrumb-item>
     </el-breadcrumb>
     <h4 style="color: #409eff; text-align: center">请从下方分类选一项进入</h4>

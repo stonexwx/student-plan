@@ -81,7 +81,7 @@ public class FirstTypeController {
      * @param fid 主键
      * @return 删除是否成功
      */
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     public String deleteById(Long fid) {
         return JSON.toJSONString(this.firstTypeService.deleteById(fid));
     }

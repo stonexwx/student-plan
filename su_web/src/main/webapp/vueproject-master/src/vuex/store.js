@@ -5,8 +5,19 @@ Vue.use(Vuex);
 // 登录验证
 export default new Vuex.Store({
     state: {
-        user: false
+        user: false,
+      options:[],
+      content:"",
     },
+  getters: {
+    // 参数列表state指的是state数据
+    getOptions(state) {
+      return state.options;
+    },
+    getContent(state) {
+      return state.content;
+    }
+  },
     mutations: {
         // 登录
         login(state, user) {
@@ -17,6 +28,12 @@ export default new Vuex.Store({
         logout(state, user) {
             state.user = "";
             localStorage.setItem("userInfo", "");
-        }
+        },
+      setCity(state, options){
+        state.options = options;//将传参设置给state的city
+      },
+      setContent(state, content){
+        state.content = content;
+      }
     }
 })

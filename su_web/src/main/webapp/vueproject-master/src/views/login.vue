@@ -9,7 +9,7 @@
       class="demo-ruleForm login-container"
     >
       <h3 class="title">用户登录</h3>
-      <el-form-item prop="username">
+      <el-form-item prop="phone">
         <el-input
           type="text"
           v-model="ruleForm.phone"
@@ -109,7 +109,8 @@ export default {
           //管理员
           if (res.data.roleId == "0") {
             this.$router.push({ path: "/system/userManage" });
-          } else if (res.data.roleId == "1") { //普通用户
+          } else if (res.data.roleId == "1") {
+            //普通用户
             this.$router.push({ path: "/Tasks/Tasks" });
           }
               }, 1000)
@@ -121,7 +122,6 @@ export default {
             }
           })
         } else {
-          // 获取图形验证码
           this.$message.error("请输入用户名密码！");
           return false;
         }

@@ -47,12 +47,13 @@ router.beforeEach((to, from, next) => {
                 })
             }
         } else {
+
             if (Boolean(localStorage.getItem("userInfo"))) { // 判断是否登录
                 if (to.path != "/" && to.path != "/login") { //判断是否要跳到登录界面
                     next();
                 } else {
                     /**
-                     * 防刷新，如果登录，修改路由跳转到登录页面，修改路由为登录后的首页 
+                     * 防刷新，如果登录，修改路由跳转到登录页面，修改路由为登录后的首页
                      */
                     next({
                         path: '/Tasks/Tasks'

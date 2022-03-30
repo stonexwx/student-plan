@@ -56,7 +56,6 @@ export default {
   data() {
     return {
       tableData: [
-
       ],
       //分页
       pagination: {
@@ -106,7 +105,6 @@ export default {
     },
     //查询所有标签信息
     getData(uid) {
-
       TagsList(uid)
         .then((res) => {
           if (res.flag) {
@@ -121,6 +119,16 @@ export default {
           this.$message.error("请求失败，请稍后再试！");
         });
     },
+    //查询重复值
+    findIndexByKeyValue(arr, key, valuetosearch) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i][key] == valuetosearch) {
+          return i;
+        }
+      }
+      return -1;
+    },
+
     //添加标签
     open() {
       const userdata = localStorage.getItem("userdata");
@@ -131,43 +139,51 @@ export default {
       })
         .then(({ value }) => {
           if (value == null) {
-            this.$message.error("怎么给爷上个空的!");
+            this.$message.error("标签名为空!");
+            return;}
+          else {
+        if(this.findIndexByKeyValue(this.tableData, 'name', value) != -1){
+            this.$message({
+              type: "warning",
+              message: "您输入的标签已存在！",
+            });
             return;
-          } else {
-            let data = {
-              "name":value,
-              "uid":uid
-            }
-            TagAdd(data)
-              .then((res) => {
-                if (res) {
-                  const userdata = localStorage.getItem("userdata");
-                  this.tableData = res.data;
-                  //重新查询所有标签
-                  let uid = JSON.parse(userdata)
-                  let data= {
-                    "uid":uid.uid
-                  }
-                  this.getData(data);
-                  this.$message.success("标签刷新成功");
-
-                  this.$message({
-                    type: "success",
-                    message: "你的输入的标签名是: " + value,
-                  });
-                } else {
-                  this.$message.error("标签请求失败");
+          }else{
+          let data = {
+            "name":value,
+            "uid":uid
+          }
+          TagAdd(data)
+            .then((res) => {
+              if (res) {
+                const userdata = localStorage.getItem("userdata");
+                this.tableData = res.data;
+                //重新查询所有标签
+                let uid = JSON.parse(userdata)
+                let data= {
+                  "uid":uid.uid
                 }
-              })
-              .catch((err) => {
-                this.$message.error("请求失败，请稍后再试！");
-              });
+                this.getData(data);
+                this.$message.success("标签刷新成功");
+                this.$message({
+                  type: "success",
+                  message: "你的输入的标签名是: " + value,
+                });
+              } else {
+                this.$message.error("标签请求失败");
+              }
+            })
+            .catch((err) => {
+              this.$message.error("请求失败，请稍后再试！");
+            });
+        }
+
           }
         })
         .catch(() => {
           this.$message({
-            type: "error",
-            message: "发生错误",
+            type: "info",
+            message: "取消添加",
           });
         });
     },
@@ -183,7 +199,6 @@ export default {
   margin: 20px auto;
   padding: 15px;
   width: 98%;
-  height: 400px;
   border: 1px rgb(240, 239, 239) solid;
 }
 </style>

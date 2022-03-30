@@ -23,6 +23,7 @@ export const TagsList = (params) => { return req("post", "http://localhost:8080/
 export const TagAdd = (params) => { return req("post", "http://localhost:8080/type/insert", params) };
 //标签管理-删除标签
 export const TagDel = (params) => { return req("post", "http://localhost:8080/type/delete", params) };
+export const TagFirstDel = (params) => { return req("post", "http://localhost:8080/firstType/delete", params) };
 export const TagDelAdmin = (params) => { return req("post", "http://localhost:8080/secondType/delete", params) };
 //标签管理-增加标签(管理员)
 export const ManTagAdd = (params) => { return req("post", "http://localhost:8080/admin_type/insert", params) };

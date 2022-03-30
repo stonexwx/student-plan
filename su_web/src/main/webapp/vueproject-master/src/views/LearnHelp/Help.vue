@@ -6,10 +6,16 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>学习笔记</el-breadcrumb-item>
+      <el-breadcrumb-item>学习资料</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <h4 style="color: #5aacff; text-align: center">请在页面最底部添加笔记</h4>
+    <el-button
+      type="primary"
+      size="mini"
+      @click="addNote"
+      style="margin-top:15px"
+    >点击添加笔记</el-button
+    >
 
     <el-divider></el-divider>
 
@@ -44,6 +50,12 @@
             @click="DeleteNote(scope.row.information.iid)"
           >点击删除</el-button
           >
+          <el-button
+            type="warning"
+            size="mini"
+            @click="selectOne(scope.row.information.content,scope.row.information.iid,)"
+          >查看详情</el-button
+          >
         </el-button-group>
       </el-table-column>
     </el-table>
@@ -52,31 +64,20 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[10, 50, 100, 200]"
+        :page-sizes="[5, 50, 100, 200]"
         :page-size="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pagination.total">
       </el-pagination>
     </div>
     <el-divider></el-divider>
-
-
-    <!-- 以下为富文本部分 -->
-    <!-- 目前富文本版本为V4 交给你了 -->
-    <!-- demo1为富文本容器 -->
-    <home-help :options="options" :getNoteData="getNoteData" :TagsList="Tags" :pagination="pagination"></home-help>
-
-
-
   </div>
 </template>
 
 <script>
-import { NoteAndHelpList, TagsList, NoteAndHelpDel } from "../../api/basisMG";
-import home from "./Home";
-import HomeHelp from "./HomeHelp";
+import {TagsList} from "../../api/basisMG";
+
 export default {
-  components: {HomeHelp},
   data() {
     return {
       //笔记模拟数据
@@ -95,14 +96,17 @@ export default {
     };
   },
   created() {
+    // console.log(this.$route.query.id)
     // type为后台判定页面的标志 笔记为0
     const userdata = localStorage.getItem("userdata");
     let data1={
       "typeId":"1",
       "uid":JSON.parse(userdata).uid,
       "page":this.pagination.currentPage,
-      "limit":this.pagination.size
+      "limit":this.pagination.size,
+      "id":this.$route.query.id
     }
+    this.Tags();
     this.getNoteData(data1);
 
   },
@@ -134,6 +138,15 @@ export default {
     handleCurrentChange(val) {
       this.pagination.currentPage = val
       this.getCourseData()
+    },
+    addNote(){
+      console.log(this.options)
+      this.$store.commit("setCity", this.options);
+      this.$router.push({path:"/LearnHelp/Editor"})
+    },
+    selectOne(content,iid){
+      this.$store.commit("setContent", content);
+      this.$router.push({path:"/LearnHelp/Editor",query:{iid:iid,typeId:"1"}});
     },
     //获取所有笔记
     getNoteData(data) {

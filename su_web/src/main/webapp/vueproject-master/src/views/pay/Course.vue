@@ -5,13 +5,12 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>课程</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-button
       type="primary"
-      @click="dialogFormVisible = true"
+      @click="addCourse(null,'1')"
       style="margin: 30px 0 0px 0px"
       v-if="role"
     >点击添加课程
@@ -36,6 +35,13 @@
           </el-button
           >
           <el-button
+            type="warning"
+            v-if="role"
+            @click="addCourse(scope.row,'0')"
+          >点击修改
+          </el-button
+          >
+          <el-button
             type="success"
             v-if="!role"
             @click="goVideo(scope.row.video)"
@@ -50,7 +56,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[10, 50, 100, 200]"
+        :page-sizes="[5, 50, 100, 200]"
         :page-size="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pagination.total">
@@ -58,12 +64,12 @@
     </div>
 
     <!-- 点击添加展开面板 -->
-    <el-dialog title="添加课程" :visible.sync="dialogFormVisible">
-      <el-form :model="CourseList">
-        <el-form-item label="名称">
+    <el-dialog title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="CourseList" :rules="rules" ref="courseList">
+        <el-form-item label="名称" prop="courseName">
           <el-input v-model="CourseList.courseName"></el-input>
         </el-form-item>
-        <el-form-item label="简介">
+        <el-form-item label="简介" prop="content">
           <el-input v-model="CourseList.content"></el-input>
         </el-form-item>
         <el-form-item label="视频上传" prop="Video">
@@ -88,15 +94,48 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit()">确 定</el-button>
+        <el-button type="primary" @click="onSubmit('courseList')">确 定</el-button>
       </div>
     </el-dialog>
 
+
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="CourseList" :rules="rules" ref="courseList">
+        <el-form-item label="名称" prop="courseName">
+          <el-input v-model="CourseList.courseName"></el-input>
+        </el-form-item>
+        <el-form-item label="简介" prop="content">
+          <el-input v-model="CourseList.content"></el-input>
+        </el-form-item>
+        <el-form-item label="视频上传" prop="Video" v-if="videoShow">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="http://localhost:8080/course/upload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="handUploadSuccess"
+            :file-list="fileList"
+            :auto-upload="true"
+            :limit="1"
+            :on-exceed="handleExceed"
+            accept=".mp4,.mkv,.avi,.rmvb"
+            name="files"
+          >
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传mp4/mkv/avi/rmvb文件，且不超过1GB</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit('courseList')">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog
       title="视频"
       :visible.sync="dialogVisible"
       width="60%">
-
            <div v-show="showVideo" >
             <video :src="videoUrl" ref="video" controls="controls" style="height: 100%;width: 100%"></video>
            </div>
@@ -126,6 +165,21 @@ export default {
       this.pagination.currentPage = val
       this.getCourseData()
     },
+    addCourse(row,type){
+      this.dialogFormVisible = true;
+        if(type == "1"){
+          this.title = "添加课程"
+          this.CourseList.courseName = ""
+          this.CourseList.content = ""
+          this.videoShow = true
+        }else if(type == "0"){
+          console.log(row)
+          this.title = "修改课程"
+          this.CourseList.courseName = row.name
+          this.CourseList.content = row.content
+          this.videoShow = false
+        }
+    },
     //获取课程数据
     getCourseData() {
       // alert(this.sid);
@@ -146,7 +200,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$message.error("(未请求)");
+          this.$message.error("(未请求1)");
         });
     },
     //删除课程
@@ -169,10 +223,12 @@ export default {
           this.$message.error("(未请求)");
         });
     },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      // this.dialogFormVisible = false;
+    },
     //这里提交整个表单 也是添加课程
-    onSubmit() {
-      //关闭面板
-      this.dialogFormVisible = false;
+    onSubmit(form) {
       const userdata = localStorage.getItem("userdata");
       let id = JSON.parse(userdata);
       let data = {
@@ -182,21 +238,29 @@ export default {
         "content": this.CourseList.content,
         "video": "http://" + this.CourseList.video
       }
-
-      CourseInsert(data)
-        .then((res) => {
-          if (res) {
-
-            this.$message.success("上传成功")
-            this.getCourseData()
-          } else {
-            this.$message.error("上传失败")
+      this.$refs[form].validate((valid) => {
+          if (valid) {
+            CourseInsert(data)
+              .then((res) => {
+                if (res) {
+                  this.$message.success("上传成功")
+                  this.CourseList.content = "";
+                  this.CourseList.courseName = ""
+                  this.getCourseData()
+                  this.dialogFormVisible = false;
+                  this.resetForm(form)
+                } else {
+                  this.$message.error("上传失败")
+                }
+              })
+              .catch((err) => {
+                  this.$message.error("(未请求)");
+                }
+              )
           }
-        })
-        .catch((err) => {
-            this.$message.error("(未请求)");
-          }
-        )
+          else {
+            this.$message.error("请仔细检查表单是否填写且是否正确");
+          }})
     },
     //点击上课
     goVideo(video) {
@@ -230,6 +294,7 @@ export default {
   },
   data() {
     return {
+      title:"添加课程",
       //动态视频路径
       videoUrl: "",
       //二级标题id
@@ -250,7 +315,11 @@ export default {
       fileList: [],
       //控制视频展示
       showVideo: false,
-
+      videoShow:true,
+      rules: {
+        courseName: [{required: true, message: '课程名不能为空', trigger: 'blur'}],
+        content: [{required: true, message: '课程简介不能为空', trigger: 'blur'}],
+      },
       //分页
       pagination: {
         currentPage: 1,

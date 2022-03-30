@@ -12,7 +12,7 @@
     <!-- 导航 -->
     <h1 style="color: #409eff; text-align: center">请在答题框内进行答题</h1>
     <!-- 倒计时 -->
-    <h4 style="color: red; text-align: center">您还剩下{{ count }}</h4>
+    <h4 style="color: red; text-align: center" v-if="!isSuccessful">您还剩下{{ count }}</h4>
     <el-divider></el-divider>
 
     <router-view></router-view>
@@ -21,6 +21,9 @@
     <div class="question" v-for="item in question" :key="item.id">
       <el-card class="box-card">
         {{ item.content }}
+      </el-card>
+      <el-card class="box-card" v-if="isSuccessful" style="color: red;font-size: 12px">
+       参考答案: {{ item.answer }}
       </el-card>
       <el-input
         type="textarea"
@@ -31,7 +34,8 @@
       </el-input>
     </div>
     <el-divider></el-divider>
-    <el-button type="primary" @click="submit()">提交</el-button>
+    <el-button type="primary" @click="submit()" v-if="!isSuccessful">提交</el-button>
+    <el-button type="primary" @click="returnTest" v-if="isSuccessful">返回题库分类</el-button>
   </div>
 </template>
 
@@ -45,35 +49,10 @@ export default {
       //一级标题id
       fid: this.$route.query.fid,
       count: "", //倒计时
+      isSuccessful:false,
       seconds: 1800, // 30分钟的秒数
       question: [
-        {
-          id: "11",
-          //答题内容 可不管 但你要传个空值给我
-          text: "",
-          content:
-            "企业发放的奖金根据利润提成。利润(I)低于或等于10万元时,奖金可提10%;利润高于10万元,低于20万元时,低于10万元的部分按10%提成,高于10万元的部分,可可提成7.5%;20万到40万之间时,高于20万元的部分,可提成5%;40万到60万之间时高于40万元的部分,可提成3%;60万到100万之间时,高于60万元的部分,可提成1.5%,高于100万元时,超过100万元的部分按1%提成,从键盘输入当月利润I,求应发放奖金总数?",
-        },
-        {
-          id: "112",
-          text: "",
-          content:
-            "有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？",
-        },
-        {
-          id: "113",
-          text: "",
-          content:
-            "古典问题：有一对兔子，从出生后第3个月起每个月都生一对兔子，小兔子长到第三个月后每个月又生一对兔子，假如兔子都不死，问每个月的兔子总数为多少？",
-        },
-        {
-          id: "114",
-          text: "",
-          content:
-            "有1、2、3、4个数字，能组成多少个互不相同且无重复数字的三位数？都是多少？",
-        },
       ],
-
     };
   },
   created() {
@@ -87,7 +66,7 @@ export default {
             this.question = res.data;
             this.$message.success("题目刷新成功");
           } else {
-            this.$message.error("题库不想让你卷!");
+            this.$message.error("题库刷新失败");
           }
         })
         .catch((err) => {
@@ -126,6 +105,7 @@ export default {
             type: "success",
             message: "已提交",
           });
+          this.isSuccessful = true;
         })
         .catch(() => {
           this.$message({
@@ -133,6 +113,9 @@ export default {
             message: "已取消",
           });
         });
+    },
+    returnTest(){
+      this.$router.push({ path: "/pay/Test/" });
     },
     //监听刷新
     listenPage() {

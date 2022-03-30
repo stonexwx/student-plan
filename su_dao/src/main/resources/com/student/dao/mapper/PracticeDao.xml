@@ -20,7 +20,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="PracticeMap">
         select
-          id, uid, content, sid
+          id, uid, content, sid,answer
         from practice
         <where>
             <if test="pra.id != null">
@@ -61,8 +61,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into practice(uid, content, sid)
-        values (#{uid}, #{content}, #{sid})
+        insert into practice(uid, content, sid,answer)
+        values (#{uid}, #{content}, #{sid},#{answer})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -97,6 +97,9 @@
             </if>
             <if test="sid != null">
                 sid = #{sid},
+            </if>
+            <if test="answer != null and answer != ''">
+                answer = #{answer},
             </if>
         </set>
         where id = #{id}

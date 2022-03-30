@@ -23,8 +23,7 @@ public class TypeServiceImpl implements TypeService {
     @Resource
     private TypeDao typeDao;
 
-    @Autowired
-    private HashMap<String,Object> map;
+
     /**
      * 通过ID查询单条数据
      *
@@ -51,6 +50,7 @@ public class TypeServiceImpl implements TypeService {
             pageRequest.setLimit((int) total);
         }
         List<Type> list = this.typeDao.queryAllByLimit(type,pageRequest);
+        Map<String,Object> map = new HashMap<>();
         map.put("flag",list.size()>0);
         map.put("data",list);
         map.put("count",total);
@@ -89,6 +89,7 @@ public class TypeServiceImpl implements TypeService {
      */
     @Override
     public Map<String, Object> deleteById(Long id) {
+        Map<String,Object> map = new HashMap<>();
         map.put("flag",this.typeDao.deleteById(id) > 0);
         return map;
     }

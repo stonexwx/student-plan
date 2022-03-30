@@ -12,8 +12,7 @@ import index from '@/views/index';
 import Tasks from '@/views/Tasks/Tasks';
 // 标签管理
 import Tag from '@/views/Tasks/Tag';
-//测试界面
-import One from '@/views/Tasks/One';
+
 
 // 题库分类
 import Test from '@/views/pay/Test';
@@ -25,9 +24,11 @@ import Course from '@/views/pay/Course';
 import GoCourse from '@/views/pay/GoCourse';
 //笔记
 import Note from '@/views/LearnHelp/Note';
+import Editor from '@/views/LearnHelp/Editor';
 //资料
 import Help from '@/views/LearnHelp/Help';
-
+import RouterHelp from '@/views/LearnHelp/RouterHelp';
+import RouterNote from '@/views/LearnHelp/RouterNote';
 /**
  * 系统管理
  */
@@ -45,7 +46,7 @@ import statistics from '@/views/charts/statistics';
 // 启用路由
 Vue.use(Router);
 
-// 导出路由 
+// 导出路由
 export default new Router({
     routes: [{
         path: '/',
@@ -79,14 +80,6 @@ export default new Router({
             path: '/Tasks/Tag',
             name: '标签管理',
             component: Tag,
-            meta: {
-                requireAuth: true
-            }
-        },
-        {
-            path: '/Tasks/One',
-            name: '测试',
-            component: One,
             meta: {
                 requireAuth: true
             }
@@ -135,6 +128,30 @@ export default new Router({
                 requireAuth: true
             }
         },
+          {
+            path: '/LearnHelp/RouterHelp',
+            name: '笔记资料分类',
+            component: RouterHelp,
+            meta: {
+              requireAuth: true
+            }
+          },
+          {
+            path: '/LearnHelp/RouterNote',
+            name: '笔记资料分类2',
+            component: RouterNote,
+            meta: {
+              requireAuth: true
+            }
+          },
+          {
+            path: '/LearnHelp/Editor',
+            name: '添加',
+            component: Editor,
+            meta: {
+              requireAuth: true
+            }
+          },
         {
             path: '/LearnHelp/Note',
             name: '学习笔记',

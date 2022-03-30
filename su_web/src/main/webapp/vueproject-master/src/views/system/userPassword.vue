@@ -5,7 +5,7 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>首页</el-breadcrumb-item>
       <el-breadcrumb-item>个人密码修改</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 个人信息表单 -->
@@ -55,7 +55,7 @@ export default {
         callback(new Error("请输入密码"));
       } else {
         if (this.Passwordform.rePassword !== "") {
-          this.$refs.Passwordform.validateField("rePassword");
+          // this.$refs.Passwordform.validateField("rePassword");
         }
         callback();
       }
@@ -76,9 +76,10 @@ export default {
         newPassword: "",
       },
       rules: {
+        //之前就是这里写反了 那个2 和那个 懂我意思没
         password: [{ validator: validateOldPass, trigger: "blur" }],
-        rePassword: [{ validator: validatePass2, trigger: "blur" }],
-        newPassword: [{ validator: validatePass, trigger: "blur" }],
+        rePassword: [{ validator: validatePass, trigger: "blur" }],
+        newPassword: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
@@ -111,7 +112,6 @@ export default {
                     type: "success",
                     message: "数据保存成功！",
                   });
-
                 } else if (res.data == null) {
                   this.$message.error("修改失败，当前密码输入错误！");
                 } else {
@@ -119,10 +119,10 @@ export default {
                 }
               })
               .catch((err) => {
-                this.$message.error("请求修改失败，组织不同意本次请求！");
+                this.$message.error("请求修改失败！");
               });
         } else {
-          this.$message.error("提交错误 让我瞅瞅");
+          this.$message.error("发生错误啦");
           return false;
         }
       });
