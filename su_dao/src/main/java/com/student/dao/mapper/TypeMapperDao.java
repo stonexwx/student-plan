@@ -1,6 +1,5 @@
 package com.student.dao.mapper;
 
-import com.student.entity.PageRequest;
 import com.student.entity.TypeMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,10 +25,9 @@ public interface TypeMapperDao {
      * 查询指定行数据
      *
      * @param typeMapper 查询条件
-     * @param pageRequest
      * @return 对象列表
      */
-    List<TypeMapper> queryAllByLimit(TypeMapper typeMapper, @Param("pageable")PageRequest pageRequest);
+    TypeMapper queryAllByLimit(TypeMapper typeMapper);
 
     /**
      * 统计总行数

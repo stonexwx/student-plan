@@ -5,7 +5,6 @@ import com.student.biz.CourseService;
 import com.student.dao.mapper.CourseDao;
 import com.student.entity.Course;
 import com.student.entity.PageRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,8 +20,6 @@ import java.util.*;
 public class CourseServiceImpl implements CourseService {
     @Resource
     private CourseDao courseDao;
-    @Autowired
-    private HashMap<String,Object> map;
     /**
      * 通过ID查询单条数据
      *
@@ -42,6 +39,7 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public Map<String, Object> queryByPage(Course course, PageRequest pageRequest) {
+        Map<String, Object> map = new HashMap<>();
         map.put("count",courseDao.count(course));
         List<Course> list = courseDao.queryAllByLimit(course,pageRequest);
         List<JSONObject> list1 =new ArrayList<>();
@@ -75,13 +73,18 @@ public class CourseServiceImpl implements CourseService {
      * 新增数据
      *
      * @param course 实例对象
+     * @param flag
      * @return 实例对象
      */
     @Override
-    public Course insert(Course course) {
-        course.setAddtime(new Date());
-        course.setState("1");
-        this.courseDao.insert(course);
+    public Course insert(Course course, Boolean flag) {
+        if(flag){
+            course.setAddtime(new Date());
+            course.setState("1");
+            this.courseDao.insert(course);
+        }else{
+            this.update(course);
+        }
         return course;
     }
 
@@ -105,6 +108,7 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public Map<String, Object> deleteById(Long id) {
+        Map<String, Object> map = new HashMap<>();
         map.put("flag",this.courseDao.deleteById(id) > 0);
         return map;
     }

@@ -22,8 +22,7 @@ import java.util.*;
 public class UsersServiceImpl implements UsersService {
     @Resource
     private UsersDao usersDao;
-    @Autowired
-    HashMap<String, Object> map;
+
 
     /**
      * 通过ID查询单条数据
@@ -45,6 +44,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Map<String, Object> queryByPage(Users users, PageRequest pageRequest) {
         long total = this.usersDao.count(users);
+        Map<String, Object> map = new HashMap<>();
         map.put("flag",true);
         map.put("data",this.usersDao.queryAllByLimit(users, pageRequest));
         map.put("count",total);
@@ -55,8 +55,9 @@ public class UsersServiceImpl implements UsersService {
     public Map<String, Object> queryByPhoneAndPassword(Users users) {
         long total = this.usersDao.count(users);
         List<Users> users1 = this.usersDao.queryAllByLimit(users, new PageRequest(1,10));
-
+        Map<String, Object> map = new HashMap<>();
         if (users1.size()>0) {
+
             map.put("flag", true);
             map.put("data", users1.get(0));
             map.put("count", total);
@@ -74,7 +75,6 @@ public class UsersServiceImpl implements UsersService {
      */
     @Override
     public Users insert(Users users) {
-        users.setRoleId("1");
         users.setAddtime(new Date());
         this.usersDao.insert(users);
         return users;

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.student.biz.InformationService;
-import com.student.entity.Course;
 import com.student.entity.Information;
 import com.student.entity.PageRequest;
 import com.student.util.UploadUtil;
@@ -41,8 +40,8 @@ public class InformationController {
      * @return 查询结果
      */
     @PostMapping("select_all")
-    public String queryByPage(Information information, PageRequest pageRequest) {
-        return JSON.toJSONString(this.informationService.queryByPage(information, pageRequest));
+    public String queryByPage(Information information, PageRequest pageRequest,Long id) {
+        return JSON.toJSONString(this.informationService.queryByPage(information, pageRequest,id));
     }
 
     /**
@@ -63,8 +62,8 @@ public class InformationController {
      * @return 新增结果
      */
     @PostMapping("insert")
-    public String add(Information information ,Long id) {
-        return JSON.toJSONString(this.informationService.insert(information,id));
+    public String add(Information information ,Long id,Boolean flag) {
+        return JSON.toJSONString(this.informationService.insert(information,id, flag));
     }
 
     /**

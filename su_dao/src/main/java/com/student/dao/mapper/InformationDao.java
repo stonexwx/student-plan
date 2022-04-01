@@ -29,7 +29,7 @@ public interface InformationDao {
      * @param pageRequest 分页对象
      * @return 对象列表
      */
-    List<Information> queryAllByLimit(@Param("info") Information information, @Param("page")PageRequest pageRequest);
+    List<Information> queryAllByLimit(@Param("info") Information information, @Param("page")PageRequest pageRequest,@Param("id") Long id);
 
     /**
      * 统计总行数

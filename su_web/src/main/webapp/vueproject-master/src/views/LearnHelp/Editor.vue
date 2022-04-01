@@ -33,7 +33,7 @@ export default {
   },
   // options: this.$store.getters.getOptions,
   created() {
-    // console.log(this.options)
+    console.log(this.iid)
   }
 }
 </script>

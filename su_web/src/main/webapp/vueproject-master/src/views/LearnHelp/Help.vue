@@ -28,8 +28,8 @@
               ><span>{{ props.row.typeMapper.name }}</span></el-tag
               >
             </el-form-item>
-            <el-form-item label="笔记详情">
-              <span style="color: #5aacff; font-weight: bold" v-html="props.row.information.content"></span>
+            <el-form-item label="笔记概览">
+              <span style="color: #5aacff; font-weight: bold" v-html="props.row.information.show"></span>
             </el-form-item>
           </el-form>
         </template>
@@ -37,25 +37,26 @@
       <el-table-column label="所属标签" prop="typeMapper.name" width="200">
       </el-table-column>
       <el-table-column
-        label="笔记详情"
-        prop="information.content"
+        label="笔记概览"
+        prop="information.show"
         :show-overflow-tooltip="true"
         width="800"
       ></el-table-column>
       <el-table-column label="操作">
         <el-button-group slot-scope="scope">
           <el-button
-            type="danger"
-            size="mini"
-            @click="DeleteNote(scope.row.information.iid)"
-          >点击删除</el-button
-          >
-          <el-button
             type="warning"
             size="mini"
             @click="selectOne(scope.row.information.content,scope.row.information.iid,)"
           >查看详情</el-button
           >
+          <el-button
+            type="danger"
+            size="mini"
+            @click="DeleteNote(scope.row.information.iid)"
+          >点击删除</el-button
+          >
+
         </el-button-group>
       </el-table-column>
     </el-table>
@@ -64,7 +65,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[5, 50, 100, 200]"
+        :page-sizes="[5, 10, 20, 30]"
         :page-size="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pagination.total">
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import {TagsList} from "../../api/basisMG";
+import {NoteAndHelpDel, NoteAndHelpList, TagsList} from "../../api/basisMG";
 
 export default {
   data() {
@@ -91,7 +92,7 @@ export default {
       pagination: {
         currentPage: 1,
         total: Number,
-        size: 10,
+        size: 5,
       },
     };
   },
@@ -106,9 +107,9 @@ export default {
       "limit":this.pagination.size,
       "id":this.$route.query.id
     }
-    this.Tags();
-    this.getNoteData(data1);
 
+    this.getNoteData(data1);
+    this.Tags();
   },
   methods: {
     Tags(){
@@ -133,18 +134,36 @@ export default {
     },
     handleSizeChange(val) {
       this.pagination.size = val
-      this.getCourseData()
+      const userdata = localStorage.getItem("userdata");
+      let data1={
+        "typeId":"0",
+        "uid":JSON.parse(userdata).uid,
+        "page":this.pagination.currentPage,
+        "limit":this.pagination.size,
+        "id":this.$route.query.id
+      }
+      this.getNoteData(data1);
     },
     handleCurrentChange(val) {
       this.pagination.currentPage = val
-      this.getCourseData()
+      const userdata = localStorage.getItem("userdata");
+      let data1={
+        "typeId":"0",
+        "uid":JSON.parse(userdata).uid,
+        "page":this.pagination.currentPage,
+        "limit":this.pagination.size,
+        "id":this.$route.query.id
+      }
+      this.getNoteData(data1);
     },
     addNote(){
       console.log(this.options)
       this.$store.commit("setCity", this.options);
-      this.$router.push({path:"/LearnHelp/Editor"})
+      this.$store.commit("setContent", null);
+      this.$router.push({path:"/LearnHelp/Editor",query:{typeId:"1"}});
     },
     selectOne(content,iid){
+      this.$store.commit("setCity", this.options);
       this.$store.commit("setContent", content);
       this.$router.push({path:"/LearnHelp/Editor",query:{iid:iid,typeId:"1"}});
     },
@@ -177,7 +196,8 @@ export default {
               "typeId":"1",
               "uid":JSON.parse(userdata).uid,
               "page":this.pagination.currentPage,
-              "limit":this.pagination.size
+              "limit":this.pagination.size,
+              "id":this.$route.query.id
             }
             this.getNoteData(data1)
             this.$message.success("笔记删除成功");

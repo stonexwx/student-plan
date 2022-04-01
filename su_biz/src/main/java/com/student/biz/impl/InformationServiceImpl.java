@@ -1,5 +1,6 @@
 package com.student.biz.impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.student.biz.InformationService;
 import com.student.dao.mapper.InformationDao;
 import com.student.dao.mapper.TypeMapperDao;
@@ -24,8 +25,7 @@ import java.util.Map;
 public class InformationServiceImpl implements InformationService {
     @Resource
     private InformationDao informationDao;
-    @Autowired
-    HashMap<String,Object> map;
+
     @Resource
     private TypeMapperDao typeMapperDao;
     /**
@@ -44,13 +44,15 @@ public class InformationServiceImpl implements InformationService {
      *
      * @param information 筛选条件
      * @param pageRequest      分页对象
+     * @param id
      * @return 查询结果
      */
     @Override
-    public Map<String, Object> queryByPage(Information information, PageRequest pageRequest) {
+    public Map<String, Object> queryByPage(Information information, PageRequest pageRequest, Long id) {
         long total = this.informationDao.count(information);
+        Map<String, Object> map = new HashMap<>();
         map.put("count",total);
-        map.put("data",this.informationDao.queryAllByLimit(information, pageRequest));
+        map.put("data",this.informationDao.queryAllByLimit(information, pageRequest,id));
         return map;
     }
 
@@ -59,16 +61,32 @@ public class InformationServiceImpl implements InformationService {
      *
      * @param information 实例对象
      * @param id
+     * @param flag
      * @return 实例对象
      */
     @Override
-    public Information insert(Information information, long id) {
-        information.setAddtime(new Date());
-        this.informationDao.insert(information);
-        TypeMapper typeMapper =new TypeMapper();
-        typeMapper.setTypeId(id);
-        typeMapper.setIid(information.getIid());
-        typeMapperDao.insert(typeMapper);
+    public Information insert(Information information, long id, Boolean flag) {
+        if(flag){
+            information.setAddtime(new Date());
+            EmojiConverter emoji = EmojiConverter.getInstance();
+            information.setContent(emoji.toHtml(information.getContent()));
+            information.setShow(emoji.toHtml(information.getShow()));
+            this.informationDao.insert(information);
+            TypeMapper typeMapper =new TypeMapper();
+            typeMapper.setTypeId(id);
+            typeMapper.setIid(information.getIid());
+            typeMapperDao.insert(typeMapper);
+        }else{
+            EmojiConverter emoji = EmojiConverter.getInstance();
+            information.setContent(emoji.toHtml(information.getContent()));
+            information.setShow(emoji.toHtml(information.getShow()));
+            this.update(information);
+            TypeMapper typeMapper =new TypeMapper();
+            typeMapper.setIid(information.getIid());
+            TypeMapper typeMapper1 = typeMapperDao.queryAllByLimit(typeMapper);
+            typeMapper1.setTypeId(id);
+            typeMapperDao.update(typeMapper1);
+        }
         return information;
     }
 
@@ -92,6 +110,7 @@ public class InformationServiceImpl implements InformationService {
      */
     @Override
     public Map<String, Object> deleteById(Long iid) {
+        Map<String, Object> map = new HashMap<>();
         map.put("flag",this.informationDao.deleteById(iid) > 0);
         return map;
     }

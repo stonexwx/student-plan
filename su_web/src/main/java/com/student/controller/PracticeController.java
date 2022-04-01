@@ -51,11 +51,12 @@ public class PracticeController {
      * 新增数据
      *
      * @param practice 实体
+     * @param flag
      * @return 新增结果
      */
     @PostMapping("insert")
-    public String add(Practice practice) {
-        return JSON.toJSONString(this.practiceService.insert(practice));
+    public String add(Practice practice,Boolean flag) {
+        return JSON.toJSONString(this.practiceService.insert(practice, flag));
     }
 
     /**

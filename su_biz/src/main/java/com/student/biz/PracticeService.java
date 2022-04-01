@@ -33,10 +33,11 @@ public interface PracticeService {
     /**
      * 新增数据
      *
-     * @param practice 实例对象
+     * @param practicem 实例对象
+     * @param flag
      * @return 实例对象
      */
-    Practice insert(Practice practice);
+    Practice insert(Practice practicem,Boolean flag);
 
     /**
      * 修改数据

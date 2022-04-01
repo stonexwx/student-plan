@@ -166,6 +166,7 @@ export default {
         .then((res) => {
           if (res) {
             this.tableData = res;
+            this.$store.commit("setUserTag",res);
             this.$message.success("标签刷新成功");
           } else {
             this.$message.error("标签刷新失败");

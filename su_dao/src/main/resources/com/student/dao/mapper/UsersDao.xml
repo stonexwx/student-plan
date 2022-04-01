@@ -151,7 +151,7 @@
                 sex = #{user.sex},
             </if>
             <if test="user.roleId != null and user.roleId != ''">
-                role_id = #{roleId},
+                role_id = #{user.roleId},
             </if>
             <if test="user.addtime != null">
                 addtime = #{user.addtime},

@@ -1,7 +1,6 @@
-
- /**
-  管理员 上传题目
- */
+/**
+管理员 上传题目
+*/
 <template>
   <div>
     <!-- 面包屑导航 -->
@@ -10,28 +9,29 @@
       <el-breadcrumb-item>题目管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-button
+      style="margin: 30px 0 0px 0px"
       type="primary"
       @click="Modify(null,'0')"
-      style="margin: 30px 0 0px 0px"
-      >点击添加题目</el-button
+    >点击添加题目
+    </el-button
     >
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="text" ref="text">
+      <el-form ref="text" :model="text">
         <el-input
-          type="textarea"
+          v-model="text.textarea"
           :rows="2"
           placeholder="请输入题目内容"
-          v-model="text.textarea"
           prop="textarea"
+          type="textarea"
         >
         </el-input>
         <el-input
-          type="text.textarea"
+          v-model="text.answer"
           :rows="2"
           placeholder="请输入题目答案"
-          v-model="text.answer"
           prop="answer"
+          type="text.textarea"
         >
         </el-input>
       </el-form>
@@ -50,48 +50,50 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="deleteQuestion(scope.row.id)"
-            >删除</el-button
+          <el-button size="mini" type="danger" @click="deleteQuestion(scope.row.id)"
+          >删除
+          </el-button
           >
-          <el-button type="warning" size="mini" @click="Modify(scope.row,'1')"
-          >修改</el-button
+          <el-button size="mini" type="warning" @click="Modify(scope.row,'1')"
+          >修改
+          </el-button
           >
         </template>
       </el-table-column>
     </el-table>
     <div class="block">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[5, 50, 100, 200]"
         :page-size="pagination.size"
+        :page-sizes="[5, 10, 20, 30]"
+        :total="pagination.total"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
       </el-pagination>
     </div>
   </div>
 </template>
 <script>
-import { TestList, TestDel, TestUpload } from "../../api/basisMG";
+import {TestList, TestDel, TestUpload} from "../../api/basisMG";
+
 export default {
   data() {
     return {
-      title:"添加",
+      title: "添加",
       //分页
       pagination: {
         currentPage: 1,
         total: Number,
-        size: 10,
+        size: 5,
       },
-      question: [
-      ],
+      question: [],
       //控制面板
       dialogFormVisible: false,
       //添加题库时的文本
-      text:{
+      text: {
         textarea: "",
-        answer:""
+        answer: ""
       },
       //二级标题id
       sid: this.$route.query.sid,
@@ -101,28 +103,32 @@ export default {
     this.getTestData()
   },
   methods: {
-    Modify(row,type){
-     this.dialogFormVisible= true;
-      if(type == "1"){
+    Modify(row, type) {
+      this.dialogFormVisible = true;
+      if (type == "1") {
         this.title = "修改"
-       this.text.textarea = row.content
+        this.text.textarea = row.content
         this.text.answer = row.answer
-      }else if(type == "0"){
+        this.text.id = row.id
+        this.text.flag=false
+      } else if (type == "0") {
         this.title = "添加"
         this.text.textarea = ''
         this.text.answer = ''
+        this.text.id = ""
+        this.text.flag=true
       }
     },
-    handUploadSuccess(response, file, fileList){
+    handUploadSuccess(response, file, fileList) {
       this.CourseList.video = response[0]
     },
     handleSizeChange(val) {
       this.pagination.size = val
-      this.getCourseData()
+      this.getTestData()
     },
     handleCurrentChange(val) {
       this.pagination.currentPage = val
-      this.getCourseData()
+      this.getTestData()
     },
     getTestData() {
       let data = {
@@ -146,8 +152,8 @@ export default {
         });
     },
     deleteQuestion(id) {
-      let data={
-        "id":id
+      let data = {
+        "id": id
       }
       TestDel(data)
         .then((res) => {
@@ -168,17 +174,18 @@ export default {
     },
     onSubmit() {
       //提交文本域
-      if(this.text.textarea == ""||this.text.answer == ""){
+      if (this.text.textarea == "" || this.text.answer == "") {
         this.$message.error("还有未输入的内容哦");
-      }
-      else{
+      } else {
         const userdata = localStorage.getItem("userdata");
         let id = JSON.parse(userdata);
         const testArr = {
-          "sid":this.sid,
-          "answer":this.text.answer,
-          "content":this.text.textarea,
-          "uid":id.uid
+          "sid": this.sid,
+          "answer": this.text.answer,
+          "content": this.text.textarea,
+          "uid": id.uid,
+          "id":this.text.id,
+          "flag":this.text.flag
         }
         TestUpload(testArr)
           .then((res) => {

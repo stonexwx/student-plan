@@ -24,8 +24,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskDao taskDao;
     @Resource
     private TypeMapperDao typeMapperDao;
-    @Resource
-    HashMap<String,Object> map;
+
     /**
      * 通过ID查询单条数据
      *
@@ -47,6 +46,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String,Object> queryByPage(Task task, PageRequest pageRequest) {
         long total = this.taskDao.count(task);
+        Map<String, Object> map = new HashMap<>();
         if(String.valueOf(pageRequest.getPage())!=null || String.valueOf(pageRequest.getPage())!=""){
             pageRequest.setPage(1);
             pageRequest.setLimit((int) total);
@@ -65,6 +65,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String, Object> queryByTid(Task task, PageRequest pageRequest) {
         long total = taskDao.count(task);
+        Map<String, Object> map = new HashMap<>();
         if(String.valueOf(pageRequest.getPage())!=null || String.valueOf(pageRequest.getPage())!=""){
             pageRequest.setPage(1);
             pageRequest.setLimit((int) total);
@@ -111,6 +112,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Map<String, Object> deleteById(Long tid) {
+        Map<String, Object> map = new HashMap<>();
         map.put("flag",this.taskDao.deleteById(tid) > 0);
         return map;
     }

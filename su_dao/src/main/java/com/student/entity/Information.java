@@ -44,6 +44,15 @@ public class Information implements Serializable {
      */
     private String state;
 
+    private String show;
+
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
+    }
 
     public Long getIid() {
         return iid;

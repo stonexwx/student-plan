@@ -21,8 +21,7 @@ public class AdminTypeServiceImpl implements AdminTypeService {
     private FirstTypeDao firstTypeDao;
     @Resource
     private SecondTypeDao secondTypeDao;
-    @Autowired
-    HashMap<String,Object> map;
+
     /**
      * 判断一级标题是否被注册
      * @param object
@@ -31,12 +30,14 @@ public class AdminTypeServiceImpl implements AdminTypeService {
      */
     @Override
     public Map<String, Object> queryByName(String object, List<SecondType> secondType) {
+        Map<String, Object> map = new HashMap<>();
         if(NumberUtils.isDigits(object)){
             FirstType firstType = new FirstType();
             firstType.setFid(Long.valueOf(object));
             PageRequest param = new PageRequest();
             param.setPage(1);
             param.setLimit(1);
+
             List<FirstType> list = this.firstTypeDao.queryAllByLimit(firstType,param);
             if(list.size()>0){
                 for (SecondType secondType1:secondType) {
@@ -52,8 +53,9 @@ public class AdminTypeServiceImpl implements AdminTypeService {
         return map;
     }
 
-    private HashMap<String,Object> secondInsert(String object, List<SecondType> secondType) {
+    private Map<String,Object> secondInsert(String object, List<SecondType> secondType) {
         FirstType firstType1 = new FirstType();
+        Map<String, Object> map = new HashMap<>();
         firstType1.setContent(object);
         if(firstTypeDao.insert(firstType1)>0){
             for (SecondType secondType1: secondType) {

@@ -60,7 +60,7 @@
       <el-pagination
         :current-page="pagination.currentPage"
         :page-size="pagination.size"
-        :page-sizes="[5, 50, 100, 200]"
+        :page-sizes="[5, 10, 20, 30]"
         :total="pagination.total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -163,7 +163,7 @@ export default {
       pagination: {
         currentPage: 1,
         total: Number,
-        size: 10,
+        size: 5,
       },
       rules: {
         userName: [{required: true, message: '昵称不能为空', trigger: 'blur'}, {

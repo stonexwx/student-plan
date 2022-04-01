@@ -26,18 +26,20 @@ public interface InformationService {
      *
      * @param information 筛选条件
      * @param pageRequest 分页对象
+     * @param id
      * @return 查询结果
      */
-    Map<String,Object> queryByPage(Information information, PageRequest pageRequest);
+    Map<String,Object> queryByPage(Information information, PageRequest pageRequest,Long id);
 
     /**
      * 新增数据
      *
      * @param information 实例对象
      * @param id
+     * @param flag
      * @return 实例对象
      */
-    Information insert(Information information,long id);
+    Information insert(Information information,long id,Boolean flag);
 
     /**
      * 修改数据

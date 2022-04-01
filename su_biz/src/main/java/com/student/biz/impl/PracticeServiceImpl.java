@@ -42,7 +42,7 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public Map<String, Object> queryByPage(Practice practice, PageRequest pageRequest) {
         long total = this.practiceDao.count(practice);
-        if(String.valueOf(pageRequest.getPage())!=null ||String.valueOf(pageRequest.getPage())!="" ){
+        if(String.valueOf(pageRequest.getPage())==null || String.valueOf(pageRequest.getPage()).equals("")){
             pageRequest.setPage(1);
             pageRequest.setLimit((int) total);
         }
@@ -55,13 +55,19 @@ public class PracticeServiceImpl implements PracticeService {
     /**
      * 新增数据
      *
-     * @param practice 实例对象
+     * @param practicem 实例对象
+     * @param flag
      * @return 实例对象
      */
     @Override
-    public Practice insert(Practice practice) {
-        this.practiceDao.insert(practice);
-        return practice;
+    public Practice insert(Practice practicem, Boolean flag) {
+        if (flag){
+            this.practiceDao.insert(practicem);
+        }else{
+            return this.update(practicem);
+        }
+
+        return practicem;
     }
 
     /**

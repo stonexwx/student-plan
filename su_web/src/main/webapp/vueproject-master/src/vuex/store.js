@@ -8,6 +8,7 @@ export default new Vuex.Store({
         user: false,
       options:[],
       content:"",
+      userTag:{},
     },
   getters: {
     // 参数列表state指的是state数据
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     getContent(state) {
       return state.content;
+    },
+    getUserTag(state) {
+      return state.userTag;
     }
   },
     mutations: {
@@ -34,6 +38,9 @@ export default new Vuex.Store({
       },
       setContent(state, content){
         state.content = content;
+      },
+      setUserTag(state,tableData){
+          state.userTag = tableData
       }
     }
 })

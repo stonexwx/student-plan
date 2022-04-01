@@ -34,9 +34,10 @@ public interface CourseService {
      * 新增数据
      *
      * @param course 实例对象
+     * @param flag
      * @return 实例对象
      */
-    Course insert(Course course);
+    Course insert(Course course,Boolean flag);
 
     /**
      * 修改数据

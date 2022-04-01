@@ -56,7 +56,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagination.currentPage"
-        :page-sizes="[5, 50, 100, 200]"
+        :page-sizes="[5, 10, 20, 30]"
         :page-size="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pagination.total">
@@ -172,9 +172,11 @@ export default {
           this.CourseList.courseName = ""
           this.CourseList.content = ""
           this.videoShow = true
+          this.CourseList.id=""
         }else if(type == "0"){
           console.log(row)
           this.title = "修改课程"
+          this.CourseList.id = row.id
           this.CourseList.courseName = row.name
           this.CourseList.content = row.content
           this.videoShow = false
@@ -236,7 +238,9 @@ export default {
         "sid": this.sid,
         "courseName": this.CourseList.courseName,
         "content": this.CourseList.content,
-        "video": "http://" + this.CourseList.video
+        "video": "http://" + this.CourseList.video,
+        "flag":this.videoShow,
+        "id":this.CourseList.id,
       }
       this.$refs[form].validate((valid) => {
           if (valid) {
@@ -324,7 +328,7 @@ export default {
       pagination: {
         currentPage: 1,
         total: Number,
-        size: 10,
+        size: 5,
       }
     };
   },
